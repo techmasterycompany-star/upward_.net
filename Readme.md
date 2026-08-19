@@ -17,6 +17,6 @@
 
 ## Branches
 
-main
 dev
+development
 feature/*
