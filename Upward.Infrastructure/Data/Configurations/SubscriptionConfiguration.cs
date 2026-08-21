@@ -12,6 +12,7 @@ public class SubscriptionConfiguration : IEntityTypeConfiguration<Subscription>
 
         builder.Property(x => x.BillingCycle).IsRequired();
         builder.Property(x => x.Status).IsRequired();
+        builder.Property(x => x.StripeSessionId).HasMaxLength(255).IsRequired(false);
         builder.Property(x => x.CurrentPeriodStart).IsRequired();
         builder.Property(x => x.CurrentPeriodEnd).IsRequired();
 

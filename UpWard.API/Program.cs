@@ -4,6 +4,8 @@ using Upward.Application;
 using Upward.Infrastructure;
 using Upward.Infrastructure.Data;
 
+DotNetEnv.Env.Load();
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -57,9 +59,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Configure the HTTP request pipeline.
-
 app.UseHttpsRedirection();
+
+app.UseWhen(
+    ctx => !ctx.Request.Path.StartsWithSegments("/api/payments/stripe/webhook"),
+    appBuilder => appBuilder.UseHttpsRedirection());
 
 app.UseAuthorization();
 
