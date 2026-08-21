@@ -1,6 +1,8 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Upward.Application.Interfaces.IService;
+using Upward.Application.Services;
 
 
 namespace Upward.Application
@@ -13,6 +15,9 @@ namespace Upward.Application
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
             services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
 
+            services.AddScoped<IAdminCategoryService, AdminCategoryService>();
+            services.AddScoped<IAdminJobService, AdminJobService>();
+            services.AddScoped<IAdminUserService, AdminUserService>();
 
             return services;
         }
