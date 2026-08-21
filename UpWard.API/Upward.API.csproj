@@ -22,11 +22,6 @@
   <ItemGroup>
     <ProjectReference Include="..\UpWard.Application\Upward.Application.csproj" />
     <ProjectReference Include="..\Upward.Infrastructure\Upward.Infrastructure.csproj" />
-    <ProjectReference Include="..\Upward.Shared\Upward.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,4 @@
 using Microsoft.OpenApi.Models;
-using System;
 using Upward.Application;
 using Upward.Infrastructure;
 using Upward.Infrastructure.Data;
@@ -57,7 +56,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Configure the HTTP request pipeline.
 
 app.UseHttpsRedirection();
 
