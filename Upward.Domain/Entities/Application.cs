@@ -19,7 +19,7 @@ namespace Upward.Domain.Entities
 
         public string ContactPhone { get; set; } = null!;
 
-        public ApplicationStatus Status { get; set; }
+        public ApplicationStatus Status { get; set; } = ApplicationStatus.Submitted;
 
         public DateTime? ReviewedAt { get; set; }
 

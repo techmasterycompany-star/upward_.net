@@ -22,7 +22,7 @@ namespace Upward.API.Controllers.Admin
         }
 
         [HttpGet("{id:long}")]
-        public async Task<IActionResult> GetUser(int id)
+        public async Task<IActionResult> GetUser(long id)
         {
             var user = await service.GetUserAsync(id);
             if (user is null) 
@@ -58,7 +58,7 @@ namespace Upward.API.Controllers.Admin
             if (!result) 
                 return BadRequest("Could not delete user. Check if user exists or is an Admin.");
 
-            return Ok(new { message = "User has been deleted successfully." });
+            return NoContent();
         }
 
     }

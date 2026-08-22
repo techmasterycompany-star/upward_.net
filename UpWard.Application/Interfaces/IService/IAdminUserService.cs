@@ -1,5 +1,4 @@
 ﻿using Upward.Application.DTOs.Admin;
-using Upward.Domain.Entities;
 
 namespace Upward.Application.Interfaces.IService
 {

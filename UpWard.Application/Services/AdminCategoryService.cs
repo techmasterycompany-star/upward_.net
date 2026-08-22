@@ -12,6 +12,9 @@ namespace Upward.Application.Services
 
         public async Task<AdminCategoryDto> CreateAsync(CreateCategoryRequest request)
         {
+            if (await NameExistsAsync(request.Name))
+                return null;
+
             var category = new Category
             {
                 Name = request.Name.Trim(),

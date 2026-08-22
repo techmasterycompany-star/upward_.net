@@ -18,6 +18,9 @@ namespace Upward.Application
             services.AddScoped<IAdminCategoryService, AdminCategoryService>();
             services.AddScoped<IAdminJobService, AdminJobService>();
             services.AddScoped<IAdminUserService, AdminUserService>();
+            services.AddScoped<IAdminTechnologyService, AdminTechnologyService>();
+            services.AddScoped<IAdminCommentService, AdminCommentService>();
+            services.AddScoped<IAdminDashboardService, AdminDashboardService>();
 
             return services;
         }

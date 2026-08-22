@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using Upward.Domain.Common;
+﻿using Upward.Domain.Common;
 using Upward.Domain.Enums;
 
 namespace Upward.Domain.Entities

@@ -2,6 +2,7 @@
 using Upward.Application.Interfaces.IRepo;
 using Upward.Application.Interfaces.IService;
 using Upward.Domain.Entities;
+using Upward.Domain.Enums;
 
 namespace Upward.Application.Services
 {
@@ -40,10 +41,10 @@ namespace Upward.Application.Services
         public async Task RejectJobAsync(long id, string reason)
         {
             var job = await repo.GetJobByIdAsync(id);
-            if (job is null)
+            if (job is null || job.Status == JobStatus.Rejected)
                 throw new KeyNotFoundException($"Job with id {id} was not found.");
 
-            job.RejectionReason = reason.Trim();
+            job.RejectionReason = string.IsNullOrWhiteSpace(reason) ? "No reason provided." : reason.Trim();
             await repo.RejectJobAsync(job);
         }
 

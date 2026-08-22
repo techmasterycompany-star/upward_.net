@@ -70,6 +70,7 @@ namespace Upward.Application.Services
                Email = user.Email,
                Role = user.Role,
                IsSuspended = user.IsSuspended,
+               IsEmailVerified = user.EmailVerifiedAt.HasValue,
                EmailVerifiedAt = user.EmailVerifiedAt,
                CreatedAt = user.CreatedAt
            };
