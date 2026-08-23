@@ -25,6 +25,8 @@ namespace Upward.Infrastructure
 
             services.AddScoped<ICandidateProfileRepository, CandidateProfileRepository>();
             services.AddScoped<ISkillsRepository, SkillsRepository>();
+            services.AddScoped<IJobRepository, JobRepository>();
+
             services.AddScoped<IStorageService, CloudinaryStorageService>();
             return services;
         }

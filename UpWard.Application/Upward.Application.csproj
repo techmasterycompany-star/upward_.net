@@ -21,8 +21,4 @@
     <ProjectReference Include="..\Upward.Shared\Upward.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\Common\" />
-  </ItemGroup>
-
 </Project>
