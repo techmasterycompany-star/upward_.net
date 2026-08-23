@@ -7,21 +7,16 @@ using Upward.Application.DTOs.Candidate;
 
 namespace Upward.Application.Validators
 {
-    public class ResumeFileValidator
+    public static class ResumeFileValidator
     {
         private const long DefaultMaxFileSize = 5 * 1024 * 1024;
 
         private const string PdfContentType = "application/pdf";
 
-        public long MaxFileSize { get; }
-
-        public ResumeFileValidator(long? maxFileSize = null)
+        public static async Task<ResumeValidationResultDto> ValidateAsync(ResumeFileDto file, long? maxFileSize = null)
         {
-            MaxFileSize = maxFileSize ?? DefaultMaxFileSize;
-        }
+            var effectiveMaxFileSize = maxFileSize ?? DefaultMaxFileSize;
 
-        public async Task<ResumeValidationResultDto> ValidateAsync(ResumeFileDto file)
-        {
             if (file is null)
             {
                 return new ResumeValidationResultDto
@@ -40,12 +35,12 @@ namespace Upward.Application.Validators
                 };
             }
 
-            if (file.Length > MaxFileSize)
+            if (file.Length > effectiveMaxFileSize)
             {
                 return new ResumeValidationResultDto
                 {
                     IsValid = false,
-                    ErrorMesssage = "Resume file cannot exceed 5 MB."
+                    ErrorMesssage = $"Resume file cannot exceed {effectiveMaxFileSize / 1024 / 1024} MB."
                 };
             }
 

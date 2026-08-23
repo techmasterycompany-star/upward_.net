@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Upward.Application.Interfaces.IRepo;
 using Upward.Application.Interfaces.IService;
 using Upward.Infrastructure.Data;
 using Upward.Infrastructure.FileStorage;
+using Upward.Infrastructure.Repositories;
 
 namespace Upward.Infrastructure
 {
@@ -21,6 +23,8 @@ namespace Upward.Infrastructure
                 options.ApiSecret = configuration["CLOUDINARY_API_SECRET"] ?? string.Empty;
             });
 
+            services.AddScoped<ICandidateProfileRepository, CandidateProfileRepository>();
+            services.AddScoped<ISkillsRepository, SkillsRepository>();
             services.AddScoped<IStorageService, CloudinaryStorageService>();
             return services;
         }
