@@ -3,6 +3,9 @@ using System;
 using Upward.Application;
 using Upward.Infrastructure;
 using Upward.Infrastructure.Data;
+using DotNetEnv;
+
+Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 

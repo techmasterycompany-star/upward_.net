@@ -1,12 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Upward.Application.Interfaces.IService;
 using Upward.Infrastructure.Data;
+using Upward.Infrastructure.FileStorage;
 
 namespace Upward.Infrastructure
 {
@@ -17,7 +14,14 @@ namespace Upward.Infrastructure
             services.AddDbContext<AppDBContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
+            services.Configure<CloudinarySettings>(options =>
+            {
+                options.CloudName = configuration["CLOUDINARY_CLOUD_NAME"] ?? string.Empty;
+                options.ApiKey = configuration["CLOUDINARY_API_KEY"] ?? string.Empty;
+                options.ApiSecret = configuration["CLOUDINARY_API_SECRET"] ?? string.Empty;
+            });
 
+            services.AddScoped<IStorageService, CloudinaryStorageService>();
             return services;
         }
     }
