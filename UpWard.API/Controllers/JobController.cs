@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+﻿using Microsoft.AspNetCore.Mvc;
 using Upward.API.Helpers;
 using Upward.Application.DTOs.Common;
 using Upward.Application.Interfaces.IService;
-using Upward.Application.Services;
 
 namespace Upward.API.Controllers
 {
@@ -22,59 +19,100 @@ namespace Upward.API.Controllers
         [HttpGet]
         public async Task<IActionResult> SearchJobs([FromQuery] JobSearchRequestDto request)
         {
-            var result = await _jobService.SearchAsync(request);
+            try
+            {
+                var result = await _jobService.SearchAsync(request);
 
-            return Ok(result);
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpGet("{jobId:long}")]
         public async Task<IActionResult> GetJob(long jobId)
         {
-            var result = await _jobService.GetByIdAsync(jobId);
+            try
+            {
+                var result = await _jobService.GetByIdAsync(jobId);
 
-            return Ok(result);
+                return Ok(result);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
         }
 
         [HttpPost("{jobId:long}/view")]
         public async Task<IActionResult> RecordView(long jobId)
         {
-            var userId = ClaimsHelper.GetUserId(User);
+            try
+            {
+                var userId = ClaimsHelper.GetUserId(User);
+                var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
 
-            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+                await _jobService.RecordViewAsync(jobId, userId, ipAddress);
 
-            await _jobService.RecordViewAsync(jobId, userId, ipAddress);
-
-            return NoContent();
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
         }
 
         [HttpPost("saved-searches")]
         public async Task<IActionResult> SaveSearch([FromBody] SaveJobSearchRequestDto request)
         {
-            var userId = ClaimsHelper.GetUserId(User);
+            try
+            {
+                var userId = ClaimsHelper.GetUserId(User);
 
-            var result = await _jobService.SaveSearchAsync(userId, request);
+                var result = await _jobService.SaveSearchAsync(userId, request);
 
-            return Ok(result);
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpGet("saved-searches")]
         public async Task<IActionResult> GetSavedSearches()
         {
-            var userId = ClaimsHelper.GetUserId(User);
+            try
+            {
+                var userId = ClaimsHelper.GetUserId(User);
 
-            var result = await _jobService.GetSavedSearchesAsync(userId);
+                var result = await _jobService.GetSavedSearchesAsync(userId);
 
-            return Ok(result);
+                return Ok(result);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
         }
 
         [HttpDelete("saved-searches/{savedSearchId:long}")]
         public async Task<IActionResult> DeleteSavedSearch(long savedSearchId)
         {
-            var userId = ClaimsHelper.GetUserId(User);
+            try
+            {
+                var userId = ClaimsHelper.GetUserId(User);
 
-            await _jobService.DeleteSavedSearchAsync(userId, savedSearchId);
+                await _jobService.DeleteSavedSearchAsync(userId, savedSearchId);
 
-            return NoContent();
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
         }
     }
 

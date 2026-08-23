@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Upward.Application.DTOs.Common;
+﻿using Upward.Application.DTOs.Common;
 using Upward.Application.Interfaces.IRepo;
 using Upward.Application.Interfaces.IService;
 using Upward.Domain.Entities;
@@ -145,9 +139,7 @@ namespace Upward.Application.Services
 
         private static string? Normalize(string? value)
         {
-            return string.IsNullOrWhiteSpace(value)
-                ? null
-                : value.Trim();
+            return string.IsNullOrWhiteSpace(value)? null : value.Trim();
         }
 
         private static SavedSearchDto MapSavedSearch(SavedSearch search)

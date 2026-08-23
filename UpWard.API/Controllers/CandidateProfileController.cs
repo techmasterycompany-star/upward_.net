@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Upward.API.Helpers;
 using Upward.Application.DTOs.Candidate;
 using Upward.Application.Interfaces.IService;
 
@@ -21,21 +22,28 @@ public class CandidateProfileController : ControllerBase
         _skillsService = skillsService;
     }
 
-    [HttpGet("{userId:long}")]
-    public async Task<ActionResult<CandidateProfileDto>> GetByUserId(long userId)
+    [HttpGet]
+    public async Task<ActionResult<CandidateProfileDto>> GetMyProfile()
     {
+        var userId = ClaimsHelper.GetUserId(User);
+
         var profile = await _candidateProfileService.GetByUserIdAsync(userId);
-        return profile is null ? NotFound() : Ok(profile);
+
+        return profile is null? NotFound(new { message = "Candidate profile not found." }) : Ok(profile);
     }
 
-    [HttpPost("{userId:long}")]
+    [HttpPost]
     [Consumes("multipart/form-data")]
-    public async Task<ActionResult<CandidateProfileDto>> Create(long userId, [FromForm] UpdateCandidateProfileDto request)
+    public async Task<ActionResult<CandidateProfileDto>> CreateNewProfile(
+        [FromForm] UpdateCandidateProfileDto request)
     {
+        var userId = ClaimsHelper.GetUserId(User);
+
         try
         {
             var profile = await _candidateProfileService.CreateAsync(userId, request);
-            return CreatedAtAction(nameof(GetByUserId), new { userId }, profile);
+
+            return CreatedAtAction(nameof(GetMyProfile), profile);
         }
         catch (ArgumentException ex)
         {
@@ -47,14 +55,18 @@ public class CandidateProfileController : ControllerBase
         }
     }
 
-    [HttpPut("{userId:long}")]
+    [HttpPut]
     [Consumes("multipart/form-data")]
-    public async Task<ActionResult<CandidateProfileDto>> Update(long userId, [FromForm] UpdateCandidateProfileDto request)
+    public async Task<ActionResult<CandidateProfileDto>> UpdateMyProfile(
+        [FromForm] UpdateCandidateProfileDto request)
     {
+        var userId = ClaimsHelper.GetUserId(User);
+
         try
         {
             var profile = await _candidateProfileService.UpdateAsync(userId, request);
-            return profile is null ? NotFound() : Ok("Profile Updated Successfully");
+
+            return profile is null? NotFound(new { message = "Candidate profile not found." }) : Ok("Profile Updated Successfully");
         }
         catch (ArgumentException ex)
         {
@@ -62,13 +74,17 @@ public class CandidateProfileController : ControllerBase
         }
     }
 
-    [HttpPost("{userId:long}/skills")]
-    public async Task<ActionResult<CandidateProfileDto>> AddSkill(long userId, [FromBody] CandidateSkillInputDto request)
+    [HttpPost("skills")]
+    public async Task<ActionResult<CandidateProfileDto>> AddSkill(
+        [FromBody] CandidateSkillInputDto request)
     {
+        var userId = ClaimsHelper.GetUserId(User);
+
         try
         {
             var profile = await _skillsService.AddSkillAsync(userId, request);
-            return profile is null ? NotFound() : Ok("Skill Added Successfully");
+
+            return profile is null? NotFound(new { message = "Candidate profile not found." }) : Ok("Skill Added Successfully");
         }
         catch (ArgumentException ex)
         {
@@ -76,13 +92,21 @@ public class CandidateProfileController : ControllerBase
         }
     }
 
-    [HttpPut("{userId:long}/skills/{candidateSkillId:long}")]
-    public async Task<ActionResult<CandidateProfileDto>> EditSkill(long userId, long candidateSkillId, [FromBody] CandidateSkillInputDto request)
+    [HttpPut("skills/{candidateSkillId:long}")]
+    public async Task<ActionResult<CandidateProfileDto>> EditSkill(
+        long candidateSkillId,
+        [FromBody] CandidateSkillInputDto request)
     {
+        var userId = ClaimsHelper.GetUserId(User);
+
         try
         {
-            var profile = await _skillsService.UpdateSkillAsync(userId, candidateSkillId, request);
-            return profile is null ? NotFound() : Ok("Skill Updated Successfully");
+            var profile = await _skillsService.UpdateSkillAsync(
+                userId,
+                candidateSkillId,
+                request);
+
+            return profile is null? NotFound(new { message = "Candidate profile or skill not found." }) : Ok("Skill Updated Successfully");
         }
         catch (ArgumentException ex)
         {
@@ -90,17 +114,34 @@ public class CandidateProfileController : ControllerBase
         }
     }
 
-    [HttpDelete("{userId:long}/skills/{candidateSkillId:long}")]
-    public async Task<ActionResult<CandidateProfileDto>> RemoveSkill(long userId, long candidateSkillId)
+    [HttpDelete("skills/{candidateSkillId:long}")]
+    public async Task<ActionResult<CandidateProfileDto>> RemoveSkill(
+        long candidateSkillId)
     {
-        var profile = await _skillsService.RemoveSkillAsync(userId, candidateSkillId);
-        return profile is null ? NotFound() : Ok("Skill Removed Successfully");
+        var userId = ClaimsHelper.GetUserId(User);
+
+        var profile = await _skillsService.RemoveSkillAsync(
+            userId,
+            candidateSkillId);
+
+        return profile is null? NotFound(new { message = "Candidate profile or skill not found." }) : Ok("Skill Removed Successfully");
     }
 
-    [HttpPost("{userId:long}/skills/bulk")]
-    public async Task<ActionResult<CandidateProfileDto>> AddSkillsBulk(long userId, [FromBody] UpdateCandidateSkillsDto request)
+    [HttpPost("skills/bulk")]
+    public async Task<ActionResult<CandidateProfileDto>> AddSkillsBulk(
+        [FromBody] UpdateCandidateSkillsDto request)
     {
-        var profile = await _skillsService.UpdateSkillsAsync(userId, request);
-        return profile is null ? NotFound() : Ok("Skills Added Successfully");
+        var userId = ClaimsHelper.GetUserId(User);
+
+        try
+        {
+            var profile = await _skillsService.UpdateSkillsAsync(userId, request);
+
+            return profile is null? NotFound(new { message = "Candidate profile not found." }) : Ok("Skills Added Successfully");
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 }
