@@ -147,5 +147,80 @@ namespace Upward.Infrastructure.Repositories
                 _ => DateTime.MinValue
             };
         }
+
+        public async Task<Job?> GetByIdAsync(long jobId)
+        {
+            return await _context.Jobs
+                .AsNoTracking()
+                .Include(j => j.Category)
+                .Include(j => j.Employer)
+                .FirstOrDefaultAsync(j => j.Id == jobId && !j.IsDeleted && j.Status == JobStatus.Approved);
+        }
+
+        public async Task<JobView?> GetExistingViewAsync(long jobId, long? userId, string? ipAddress)
+        {
+            if (userId.HasValue)
+            {
+                return await _context.JobViews
+                    .FirstOrDefaultAsync(x =>
+                        x.JobId == jobId &&
+                        x.UserId == userId);
+            }
+
+            if (string.IsNullOrWhiteSpace(ipAddress))
+                return null;
+
+            return await _context.JobViews
+                .FirstOrDefaultAsync(x =>
+                    x.JobId == jobId &&
+                    x.UserId == null &&
+                    x.IpAddress == ipAddress);
+        }
+
+        public async Task AddJobViewAsync(JobView jobView)
+        {
+            await _context.JobViews.AddAsync(jobView);
+        }
+
+        public async Task IncrementViewsCountAsync(long jobId)
+        {
+            await _context.Jobs
+                .Where(j => j.Id == jobId)
+                .ExecuteUpdateAsync(setters => setters.SetProperty(j => j.ViewsCount, j => j.ViewsCount + 1));
+        }
+
+        public async Task AddSavedSearchAsync(SavedSearch savedSearch)
+        {
+            await _context.SavedSearches.AddAsync(savedSearch);
+        }
+
+        public async Task<List<SavedSearch>> GetSavedSearchesAsync(long candidateId)
+        {
+            return await _context.SavedSearches
+                .AsNoTracking()
+                .Include(x => x.Category)
+                .Where(x => x.CandidateId == candidateId)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync();
+        }
+
+        public async Task<SavedSearch?> GetSavedSearchByIdAsync(long candidateId, long savedSearchId)
+        {
+            return await _context.SavedSearches
+                .FirstOrDefaultAsync(x =>
+                    x.Id == savedSearchId &&
+                    x.CandidateId == candidateId);
+        }
+
+        public void RemoveSavedSearch(SavedSearch savedSearch)
+        {
+            _context.SavedSearches.Remove(savedSearch);
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

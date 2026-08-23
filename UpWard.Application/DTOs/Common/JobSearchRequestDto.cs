@@ -34,6 +34,4 @@ namespace Upward.Application.DTOs.Common
 
         public int PageSize { get; set; } = 10;
     }
-
-
 }
