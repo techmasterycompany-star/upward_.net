@@ -14,7 +14,8 @@ namespace Upward.Domain.Entities
 
         public string? PortfolioUrl { get; set; }
 
-        public string? Resume { get; set; }
+        public string? ResumeUrl { get; set; }
+        public string? ResumePublicId { get; set; }
 
         public string? LinkedinProfile { get; set; }
 
