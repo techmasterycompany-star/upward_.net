@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Upward.Application.DTOs.Common;
 using Upward.Application.Interfaces.IRepo;
+using Upward.Application.Mappings;
 using Upward.Domain.Entities;
 using Upward.Domain.Enums;
 using Upward.Infrastructure.Data;
@@ -90,25 +91,7 @@ namespace Upward.Infrastructure.Repositories
             var items = await query
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .Select(j => new JobSearchResultDto
-                {
-                    Id = j.Id,
-                    Title = j.Title,
-                    Description = j.Description,
-                    Location = j.Location,
-                    WorkType = j.WorkType,
-                    SalaryMin = j.SalaryMin,
-                    SalaryMax = j.SalaryMax,
-                    ExperienceLevel = j.ExperienceLevel,
-                    ApplicationDeadline = j.ApplicationDeadline,
-                    CreatedAt = j.CreatedAt,
-
-                    CategoryId = j.CategoryId,
-                    CategoryName = j.Category.Name,
-
-                    EmployerId = j.EmployerId,
-                    CompanyName = j.Employer.CompanyName
-                })
+                .Select(j => j.ToSearchResultDto())
                 .ToListAsync();
 
             return new PagedResultDto<JobSearchResultDto>
@@ -207,9 +190,7 @@ namespace Upward.Infrastructure.Repositories
         public async Task<SavedSearch?> GetSavedSearchByIdAsync(long candidateId, long savedSearchId)
         {
             return await _context.SavedSearches
-                .FirstOrDefaultAsync(x =>
-                    x.Id == savedSearchId &&
-                    x.CandidateId == candidateId);
+                .FirstOrDefaultAsync(x => x.Id == savedSearchId && x.CandidateId == candidateId);
         }
 
         public void RemoveSavedSearch(SavedSearch savedSearch)

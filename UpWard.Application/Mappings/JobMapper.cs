@@ -28,6 +28,28 @@ namespace Upward.Application.Mappings
                 ApplicationsCount = job.ApplicationsCount
             };
         }
+        public static JobSearchResultDto ToSearchResultDto(this Job job)
+        {
+            return new JobSearchResultDto
+            {
+                Id = job.Id,
+                Title = job.Title,
+                Description = job.Description,
+                Location = job.Location,
+                WorkType = job.WorkType,
+                SalaryMin = job.SalaryMin,
+                SalaryMax = job.SalaryMax,
+                ExperienceLevel = job.ExperienceLevel,
+                ApplicationDeadline = job.ApplicationDeadline,
+                CreatedAt = job.CreatedAt,
+
+                CategoryId = job.CategoryId,
+                CategoryName = job.Category.Name,
+
+                EmployerId = job.EmployerId,
+                CompanyName = job.Employer.CompanyName
+            };
+        }
 
         public static SavedSearchDto ToDto(this SavedSearch search)
         {
