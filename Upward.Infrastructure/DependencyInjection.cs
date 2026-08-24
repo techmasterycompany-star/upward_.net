@@ -1,12 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Upward.Application.Interfaces.IRepo;
 using Upward.Infrastructure.Data;
+using Upward.Infrastructure.Repositories;
 
 namespace Upward.Infrastructure
 {
@@ -17,6 +14,7 @@ namespace Upward.Infrastructure
             services.AddDbContext<AppDBContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddScoped<IEmployerRepository, EmployerRepository>();
 
             return services;
         }

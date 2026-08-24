@@ -1,11 +1,8 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Upward.Application.Interfaces.IService;
+using Upward.Application.Services;
 
 namespace Upward.Application
 {
@@ -17,6 +14,7 @@ namespace Upward.Application
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
             services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
 
+            services.AddScoped<IEmployerService, EmployerService>();
 
             return services;
         }
