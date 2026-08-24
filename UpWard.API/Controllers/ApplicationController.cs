@@ -7,9 +7,9 @@ using Upward.Application.Interfaces.IService;
 
 namespace Upward.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/candidate/applications")]
     [ApiController]
-    //[Authorize(Roles = "Candidate")]
+    [Authorize(Roles = "Candidate")]
     public class ApplicationController : ControllerBase
     {
         private readonly IApplicationService _applicationService;

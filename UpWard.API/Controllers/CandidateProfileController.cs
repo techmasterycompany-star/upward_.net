@@ -7,7 +7,7 @@ using Upward.Application.Interfaces.IService;
 namespace Upward.API.Controllers;
 
 [ApiController]
-[Route("api/candidate-profiles")]
+[Route("api/candidate/profile")]
 [Authorize(Roles = "Candidate")]
 public class CandidateProfileController : ControllerBase
 {
