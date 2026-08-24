@@ -107,7 +107,7 @@ namespace Upward.Application.Services
 
             if (!validationResult.IsValid)
             {
-                throw new ArgumentException(validationResult.ErrorMesssage ?? "Invalid resume file.", nameof(resumeFile));
+                throw new ArgumentException(validationResult.ErrorMesssage ?? "Invalid resume file.");
             }
 
             var uploadResult = await _storageService.UploadAsync(stream, resumeFile.FileName, resumeFile.ContentType, "resumes");

@@ -1,6 +1,7 @@
 ﻿using Upward.Application.DTOs.Common;
 using Upward.Application.Interfaces.IRepo;
 using Upward.Application.Interfaces.IService;
+using Upward.Application.Mappings;
 using Upward.Domain.Entities;
 
 namespace Upward.Application.Services
@@ -40,26 +41,7 @@ namespace Upward.Application.Services
             if (job == null)
                 throw new KeyNotFoundException("Job not found.");
 
-            return new JobDetailsDto
-            {
-                Id = job.Id,
-                EmployerId = job.EmployerId,
-                CategoryId = job.CategoryId,
-                CategoryName = job.Category.Name,
-                Title = job.Title,
-                Description = job.Description,
-                Responsibilities = job.Responsibilities,
-                Requirements = job.Requirements,
-                Location = job.Location,
-                WorkType = job.WorkType,
-                SalaryMin = job.SalaryMin,
-                SalaryMax = job.SalaryMax,
-                ExperienceLevel = job.ExperienceLevel,
-                ApplicationDeadline = job.ApplicationDeadline,
-                CreatedAt = job.CreatedAt,
-                ViewsCount = job.ViewsCount,
-                ApplicationsCount = job.ApplicationsCount
-            };
+            return job.ToDto();
         }
 
         public async Task RecordViewAsync(long jobId, long? userId, string? ipAddress)
@@ -115,14 +97,14 @@ namespace Upward.Application.Services
             await _jobRepository.AddSavedSearchAsync(savedSearch);
             await _jobRepository.SaveChangesAsync();
 
-            return MapSavedSearch(savedSearch);
+            return savedSearch.ToDto();
         }
 
         public async Task<List<SavedSearchDto>> GetSavedSearchesAsync(long candidateId)
         {
             var searches = await _jobRepository.GetSavedSearchesAsync(candidateId);
 
-            return searches.Select(MapSavedSearch).ToList();
+            return searches.Select(s => s.ToDto()).ToList();
         }
 
         public async Task DeleteSavedSearchAsync(long candidateId, long savedSearchId)
@@ -140,22 +122,6 @@ namespace Upward.Application.Services
         private static string? Normalize(string? value)
         {
             return string.IsNullOrWhiteSpace(value)? null : value.Trim();
-        }
-
-        private static SavedSearchDto MapSavedSearch(SavedSearch search)
-        {
-            return new SavedSearchDto
-            {
-                Id = search.Id,
-                Name = search.Name,
-                Keyword = search.Keyword,
-                Location = search.Location,
-                CategoryId = search.CategoryId,
-                WorkType = search.WorkType,
-                MinSalary = search.MinSalary,
-                MaxSalary = search.MaxSalary,
-                ExperienceLevel = search.ExperienceLevel
-            };
         }
     }
 }

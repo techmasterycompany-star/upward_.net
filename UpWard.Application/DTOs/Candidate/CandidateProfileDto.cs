@@ -30,5 +30,4 @@ namespace Upward.Application.DTOs.Candidate
         public DateTime UpdatedAt { get; set; }
     }
 
-
 }

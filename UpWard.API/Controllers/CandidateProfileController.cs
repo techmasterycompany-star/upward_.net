@@ -23,24 +23,34 @@ public class CandidateProfileController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<CandidateProfileDto>> GetMyProfile()
+    public async Task<IActionResult> GetMyProfile()
     {
-        var userId = ClaimsHelper.GetUserId(User);
+        try
+        {
+            var userId = ClaimsHelper.GetUserId(User);
 
-        var profile = await _candidateProfileService.GetByUserIdAsync(userId);
+            var profile = await _candidateProfileService.GetByUserIdAsync(userId);
 
-        return profile is null? NotFound(new { message = "Candidate profile not found." }) : Ok(profile);
+            return profile is null? NotFound(new { message = "Candidate profile not found." }) : Ok(profile);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An unexpected error occurred." });
+        }
     }
 
     [HttpPost]
     [Consumes("multipart/form-data")]
-    public async Task<ActionResult<CandidateProfileDto>> CreateNewProfile(
-        [FromForm] UpdateCandidateProfileDto request)
+    public async Task<IActionResult> CreateNewProfile([FromForm] UpdateCandidateProfileDto request)
     {
-        var userId = ClaimsHelper.GetUserId(User);
 
         try
         {
+            var userId = ClaimsHelper.GetUserId(User);
             var profile = await _candidateProfileService.CreateAsync(userId, request);
 
             return CreatedAtAction(nameof(GetMyProfile), profile);
@@ -53,17 +63,24 @@ public class CandidateProfileController : ControllerBase
         {
             return Conflict(new { message = ex.Message });
         }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An unexpected error occurred." });
+        }
     }
 
     [HttpPut]
     [Consumes("multipart/form-data")]
-    public async Task<ActionResult<CandidateProfileDto>> UpdateMyProfile(
-        [FromForm] UpdateCandidateProfileDto request)
+    public async Task<IActionResult> UpdateMyProfile([FromForm] UpdateCandidateProfileDto request)
     {
-        var userId = ClaimsHelper.GetUserId(User);
 
         try
         {
+            var userId = ClaimsHelper.GetUserId(User);
             var profile = await _candidateProfileService.UpdateAsync(userId, request);
 
             return profile is null? NotFound(new { message = "Candidate profile not found." }) : Ok("Profile Updated Successfully");
@@ -72,16 +89,24 @@ public class CandidateProfileController : ControllerBase
         {
             return BadRequest(new { message = ex.Message });
         }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An unexpected error occurred." });
+        }
     }
 
     [HttpPost("skills")]
-    public async Task<ActionResult<CandidateProfileDto>> AddSkill(
+    public async Task<IActionResult> AddSkill(
         [FromBody] CandidateSkillInputDto request)
     {
-        var userId = ClaimsHelper.GetUserId(User);
 
         try
         {
+            var userId = ClaimsHelper.GetUserId(User);
             var profile = await _skillsService.AddSkillAsync(userId, request);
 
             return profile is null? NotFound(new { message = "Candidate profile not found." }) : Ok("Skill Added Successfully");
@@ -90,17 +115,23 @@ public class CandidateProfileController : ControllerBase
         {
             return BadRequest(new { message = ex.Message });
         }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An unexpected error occurred." });
+        }
     }
 
     [HttpPut("skills/{candidateSkillId:long}")]
-    public async Task<ActionResult<CandidateProfileDto>> EditSkill(
-        long candidateSkillId,
-        [FromBody] CandidateSkillInputDto request)
+    public async Task<IActionResult> EditSkill(long candidateSkillId, [FromBody] CandidateSkillInputDto request)
     {
-        var userId = ClaimsHelper.GetUserId(User);
 
         try
         {
+            var userId = ClaimsHelper.GetUserId(User);
             var profile = await _skillsService.UpdateSkillAsync(
                 userId,
                 candidateSkillId,
@@ -112,29 +143,45 @@ public class CandidateProfileController : ControllerBase
         {
             return BadRequest(new { message = ex.Message });
         }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An unexpected error occurred." });
+        }
     }
 
     [HttpDelete("skills/{candidateSkillId:long}")]
-    public async Task<ActionResult<CandidateProfileDto>> RemoveSkill(
-        long candidateSkillId)
+    public async Task<IActionResult> RemoveSkill(long candidateSkillId)
     {
-        var userId = ClaimsHelper.GetUserId(User);
+        try
+        {
+            var userId = ClaimsHelper.GetUserId(User);
 
-        var profile = await _skillsService.RemoveSkillAsync(
-            userId,
-            candidateSkillId);
+            var profile = await _skillsService.RemoveSkillAsync(
+                userId,
+                candidateSkillId);
 
-        return profile is null? NotFound(new { message = "Candidate profile or skill not found." }) : Ok("Skill Removed Successfully");
+            return profile is null? NotFound(new { message = "Candidate profile or skill not found." }) : Ok("Skill Removed Successfully");
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An unexpected error occurred." });
+        }
     }
 
     [HttpPost("skills/bulk")]
-    public async Task<ActionResult<CandidateProfileDto>> AddSkillsBulk(
-        [FromBody] UpdateCandidateSkillsDto request)
+    public async Task<IActionResult> AddSkillsBulk([FromBody] UpdateCandidateSkillsDto request)
     {
-        var userId = ClaimsHelper.GetUserId(User);
-
         try
         {
+            var userId = ClaimsHelper.GetUserId(User); 
             var profile = await _skillsService.UpdateSkillsAsync(userId, request);
 
             return profile is null? NotFound(new { message = "Candidate profile not found." }) : Ok("Skills Added Successfully");
@@ -142,6 +189,14 @@ public class CandidateProfileController : ControllerBase
         catch (ArgumentException ex)
         {
             return BadRequest(new { message = ex.Message });
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An unexpected error occurred." });
         }
     }
 }

@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Upward.Domain.Entities;
 using Upward.Domain.Enums;
-using JobApplication = Upward.Domain.Entities.Application;
 
 namespace Upward.Infrastructure.Data
 {
