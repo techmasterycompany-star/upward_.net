@@ -20,7 +20,7 @@ namespace Upward.Infrastructure
             services.AddScoped<ITechnologyRepository, TechnologyRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IAdminDashboardRepository, AdminDashboardRepository>();
-            
+            services.AddScoped<IEmployerRepository, EmployerRepository>();
 
             return services;
         }

@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Upward.Application.Interfaces.IService;
 using Upward.Application.Services;
 
-
 namespace Upward.Application
 {
     public static class DependencyInjection
@@ -21,6 +20,8 @@ namespace Upward.Application
             services.AddScoped<IAdminTechnologyService, AdminTechnologyService>();
             services.AddScoped<IAdminCommentService, AdminCommentService>();
             services.AddScoped<IAdminDashboardService, AdminDashboardService>();
+
+            services.AddScoped<IEmployerService, EmployerService>();
 
             return services;
         }
