@@ -25,6 +25,11 @@ namespace Upward.Application
             services.AddScoped<IEmployerJobService, EmployerJobService>();
             services.AddScoped<IEmployerApplicationService, EmployerApplicationService>();
             services.AddScoped<IEmployerAnalyticsService, EmployerAnalyticsService>();
+            services.AddScoped<ICandidateProfileService, CandidateProfileService>();
+            services.AddScoped<ISkillsService, SkillsService>();
+            services.AddScoped<IJobService, JobService>();
+            services.AddScoped<IApplicationService, ApplicationService>();
+
 
             return services;
         }

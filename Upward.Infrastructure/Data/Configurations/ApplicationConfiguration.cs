@@ -1,4 +1,3 @@
-using JobApplication = Upward.Domain.Entities.Application;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Upward.Domain.Entities;
@@ -9,6 +8,7 @@ public class ApplicationConfiguration : IEntityTypeConfiguration<JobApplication>
 {
     public void Configure(EntityTypeBuilder<JobApplication> builder)
     {
+        builder.ToTable("Applications");
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Resume).IsRequired();

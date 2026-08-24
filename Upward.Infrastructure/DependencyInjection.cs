@@ -2,7 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Upward.Application.Interfaces.IRepo;
+using Upward.Application.Interfaces.IService;
 using Upward.Infrastructure.Data;
+using Upward.Infrastructure.FileStorage;
 using Upward.Infrastructure.Repositories;
 
 namespace Upward.Infrastructure
@@ -14,6 +16,17 @@ namespace Upward.Infrastructure
             services.AddDbContext<AppDBContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
+            services.Configure<CloudinarySettings>(options =>
+            {
+                options.CloudName = configuration["CLOUDINARY_CLOUD_NAME"] ?? string.Empty;
+                options.ApiKey = configuration["CLOUDINARY_API_KEY"] ?? string.Empty;
+                options.ApiSecret = configuration["CLOUDINARY_API_SECRET"] ?? string.Empty;
+            });
+
+            services.AddScoped<ICandidateProfileRepository, CandidateProfileRepository>();
+            services.AddScoped<ISkillsRepository, SkillsRepository>();
+            services.AddScoped<IJobRepository, JobRepository>();
+            services.AddScoped<IApplicationRepository, ApplicationRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IJobRepository, JobRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
@@ -25,6 +38,7 @@ namespace Upward.Infrastructure
             services.AddScoped<IEmployerApplicationRepository, EmployerApplicationRepository>();
             services.AddScoped<IEmployerAnalyticsRepository, EmployerAnalyticsRepository>();
 
+            services.AddScoped<IStorageService, CloudinaryStorageService>();
             return services;
         }
     }

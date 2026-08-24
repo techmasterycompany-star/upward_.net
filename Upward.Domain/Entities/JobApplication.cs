@@ -3,7 +3,8 @@ using Upward.Domain.Enums;
 
 namespace Upward.Domain.Entities
 {
-    public class Application : SoftDeletableEntity
+    
+    public class JobApplication : SoftDeletableEntity
     {
         public long JobId { get; set; }
 

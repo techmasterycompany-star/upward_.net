@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Upward.Application.DTOs.Common;
 using Upward.Application.Interfaces.IRepo;
+using Upward.Application.Mappings;
 using Upward.Domain.Entities;
 using Upward.Domain.Enums;
 using Upward.Infrastructure.Data;
@@ -10,37 +12,201 @@ namespace Upward.Infrastructure.Repositories
     {
         private readonly AppDBContext context;
         public JobRepository(AppDBContext context) => this.context = context;
+        private readonly AppDBContext _context;
 
 
         public async Task<List<Job>> GetAllJobsAsync() => 
             await context.Jobs
+        public async Task<PagedResultDto<JobSearchResultDto>> SearchAsync(JobSearchRequestDto request)
+        {
+            IQueryable<Job> query = _context.Jobs
+                .AsNoTracking()
                 .Include(j => j.Employer)
                 .Include(j => j.Category)
                 .Where(j => !j.IsDeleted)
                 .OrderByDescending(j => j.CreatedAt)
+                .Where(j =>!j.IsDeleted && (j.Status == JobStatus.Approved || j.Status == JobStatus.Closed));
+
+            // Keyword
+            if (!string.IsNullOrWhiteSpace(request.Keyword))
+            {
+                var keyword = request.Keyword.Trim();
+
+                query = query.Where(j => j.Title.Contains(keyword) || j.Description.Contains(keyword));
+            }
+
+            // Location
+            if (!string.IsNullOrWhiteSpace(request.Location))
+            {
+                var location = request.Location.Trim();
+
+                query = query.Where(j => j.Location != null &&  j.Location.Contains(location));
+            }
+
+            // Category
+            if (request.CategoryId.HasValue)
+            {
+                query = query.Where(j => j.CategoryId == request.CategoryId.Value);
+            }
+
+            // Work Type
+            if (request.WorkType.HasValue)
+            {
+                query = query.Where(j => j.WorkType == request.WorkType.Value);
+            }
+
+            // Salary
+            if (request.MinSalary.HasValue)
+            {
+                query = query.Where(j => j.SalaryMax.HasValue && j.SalaryMax.Value >= request.MinSalary.Value);
+            }
+
+            if (request.MaxSalary.HasValue)
+            {
+                query = query.Where(j => j.SalaryMin.HasValue && j.SalaryMin.Value <= request.MaxSalary.Value);
+            }
+
+            // Experience Level
+            if (request.ExperienceLevel.HasValue)
+            {
+                query = query.Where(j => j.ExperienceLevel == request.ExperienceLevel.Value);
+            }
+
+            // Date Posted
+            if (request.PostedAfter.HasValue && request.PostedAfter.Value != DatePostedFilter.AnyTime)
+            {
+                var date = GetPostedAfterDate(request.PostedAfter.Value);
+
+                query = query.Where(j => j.CreatedAt >= date);
+            }
+
+            // Total count
+            var totalCount = await query.CountAsync();
+
+            // Sorting
+            query = ApplySorting(query, request);
+
+            // Pagination
+            var page = request.Page < 1? 1 : request.Page;
+
+            var pageSize = request.PageSize <= 0? 10 : Math.Min(request.PageSize, 100);
+
+            var items = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(j => j.ToSearchResultDto())
                 .ToListAsync();
         public async Task<List<Job>> GetPendingJobsAsync() => 
             await context.Jobs
                 .Include(j => j.Employer)
-                .Include(j => j.Category)
-                .Where(j => !j.IsDeleted && j.Status == JobStatus.PendingApproval)
-                .OrderByDescending(j => j.CreatedAt)
-                .ToListAsync();
-        public async Task<Job?> GetJobByIdAsync(long id) => 
-            await context.Jobs
-                .Include(j => j.Employer)
-                .Include(j => j.Category)
-                .FirstOrDefaultAsync(j => j.Id == id && !j.IsDeleted);
-        public async Task ApproveJobAsync(Job job)
-        {
-            job.Status = JobStatus.Approved;
-            job.RejectionReason = null;
-            await context.SaveChangesAsync();
+
+            return new PagedResultDto<JobSearchResultDto>
+            {
+                Items = items,
+                PageSize = pageSize,
+                Page = page,
+                TotalCount = totalCount,
+            };
         }
-        public async Task RejectJobAsync(Job job)
+
+        private static IQueryable<Job> ApplySorting(IQueryable<Job> query, JobSearchRequestDto request)
         {
-            job.Status = JobStatus.Rejected;
-            await context.SaveChangesAsync();
+            return request.SortBy switch
+            {
+                JobSortBy.Salary => request.SortDirection == SortDirection.Ascending
+                        ? query.OrderBy(j => j.SalaryMin) : query.OrderByDescending(j => j.SalaryMin),
+
+                JobSortBy.DatePosted => request.SortDirection == SortDirection.Ascending
+                        ? query.OrderBy(j => j.CreatedAt) : query.OrderByDescending(j => j.CreatedAt),
+
+                _ => query.OrderByDescending(j => j.CreatedAt)
+            };
+        }
+
+        private static DateTime GetPostedAfterDate(DatePostedFilter filter)
+        {
+            var now = DateTime.Now;
+
+            return filter switch
+            {
+                DatePostedFilter.Today =>  now.Date,
+                DatePostedFilter.Last3Days => now.AddDays(-3),
+                DatePostedFilter.Last7Days => now.AddDays(-7),
+                DatePostedFilter.Last30Days => now.AddDays(-30),
+                _ => DateTime.MinValue
+            };
+        }
+
+        public async Task<Job?> GetByIdAsync(long jobId)
+        {
+            return await _context.Jobs
+                .AsNoTracking()
+                .Include(j => j.Category)
+                .Include(j => j.Employer)
+                .FirstOrDefaultAsync(j => j.Id == jobId && !j.IsDeleted && j.Status == JobStatus.Approved);
+        }
+
+        public async Task<JobView?> GetExistingViewAsync(long jobId, long? userId, string? ipAddress)
+        {
+            if (userId.HasValue)
+            {
+                return await _context.JobViews
+                    .FirstOrDefaultAsync(x =>
+                        x.JobId == jobId &&
+                        x.UserId == userId);
+            }
+
+            if (string.IsNullOrWhiteSpace(ipAddress))
+                return null;
+
+            return await _context.JobViews
+                .FirstOrDefaultAsync(x =>
+                    x.JobId == jobId &&
+                    x.UserId == null &&
+                    x.IpAddress == ipAddress);
+        }
+
+        public async Task AddJobViewAsync(JobView jobView)
+        {
+            await _context.JobViews.AddAsync(jobView);
+        }
+
+        public async Task IncrementViewsCountAsync(long jobId)
+        {
+            await _context.Jobs
+                .Where(j => j.Id == jobId)
+                .ExecuteUpdateAsync(setters => setters.SetProperty(j => j.ViewsCount, j => j.ViewsCount + 1));
+        }
+
+        public async Task AddSavedSearchAsync(SavedSearch savedSearch)
+        {
+            await _context.SavedSearches.AddAsync(savedSearch);
+        }
+
+        public async Task<List<SavedSearch>> GetSavedSearchesAsync(long candidateId)
+        {
+            return await _context.SavedSearches
+                .AsNoTracking()
+                .Include(x => x.Category)
+                .Where(x => x.CandidateId == candidateId)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync();
+        }
+
+        public async Task<SavedSearch?> GetSavedSearchByIdAsync(long candidateId, long savedSearchId)
+        {
+            return await _context.SavedSearches
+                .FirstOrDefaultAsync(x => x.Id == savedSearchId && x.CandidateId == candidateId);
+        }
+
+        public void RemoveSavedSearch(SavedSearch savedSearch)
+        {
+            _context.SavedSearches.Remove(savedSearch);
+        }
+
+        public async Task SaveChangesAsync()
+        public async Task RejectJobAsync(Job job)
+            await _context.SaveChangesAsync();
         }
     }
 }
