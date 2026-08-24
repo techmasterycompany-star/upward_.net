@@ -12,5 +12,6 @@ namespace Upward.Application.Interfaces.IService
         Task<EmployerProfileDto> UpdateAsync(long id, UpdateEmployerProfileRequest request);
         Task<bool> DeleteAsync(long id);
         Task<List<EmployerJobDto>> GetJobsAsync(long employerId);
+        Task<string> UploadLogoAsync(long employerId, Stream fileStream, string fileName);
     }
 }

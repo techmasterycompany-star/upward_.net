@@ -129,5 +129,30 @@ namespace Upward.Application.Services
             ActiveSubscriptionsCount = e.Subscriptions?.Count(s => s.Status == Domain.Enums.SubscriptionStatus.Active) ?? 0,
             CreatedAt = e.CreatedAt
         };
+
+        public async Task<string> UploadLogoAsync(long employerId, Stream fileStream, string fileName)
+        {
+            var employer = await _employerRepository.GetByIdAsync(employerId)
+                ?? throw new Exception("Employer profile not found.");
+
+            var uploadsDir = Path.Combine("wwwroot", "uploads", "logos");
+            Directory.CreateDirectory(uploadsDir);
+
+            var ext = Path.GetExtension(fileName);
+            var uniqueName = $"{employerId}_{DateTime.UtcNow:yyyyMMddHHmmss}{ext}";
+            var filePath = Path.Combine(uploadsDir, uniqueName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await fileStream.CopyToAsync(stream);
+            }
+
+            var logoUrl = $"/uploads/logos/{uniqueName}";
+            employer.CompanyLogo = logoUrl;
+            employer.UpdatedAt = DateTime.UtcNow;
+            _employerRepository.Update(employer);
+
+            return logoUrl;
+        }
     }
 }

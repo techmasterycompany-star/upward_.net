@@ -86,5 +86,30 @@ namespace Upward.API.Controllers
             var jobs = await _service.GetJobsAsync(id);
             return Ok(jobs);
         }
+
+        [HttpPost("{id:long}/logo")]
+        public async Task<IActionResult> UploadLogo(long id, IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("No file uploaded.");
+
+            var allowedTypes = new[] { "image/jpeg", "image/png", "image/webp" };
+            if (!allowedTypes.Contains(file.ContentType.ToLower()))
+                return BadRequest("Only JPG, PNG, and WebP files are allowed.");
+
+            if (file.Length > 5 * 1024 * 1024)
+                return BadRequest("File size must be less than 5MB.");
+
+            try
+            {
+                using var stream = file.OpenReadStream();
+                var logoUrl = await _service.UploadLogoAsync(id, stream, file.FileName);
+                return Ok(new { logoUrl });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
