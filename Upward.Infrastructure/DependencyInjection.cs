@@ -15,6 +15,9 @@ namespace Upward.Infrastructure
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<IEmployerRepository, EmployerRepository>();
+            services.AddScoped<IEmployerJobRepository, EmployerJobRepository>();
+            services.AddScoped<IEmployerApplicationRepository, EmployerApplicationRepository>();
+            services.AddScoped<IEmployerAnalyticsRepository, EmployerAnalyticsRepository>();
 
             return services;
         }
