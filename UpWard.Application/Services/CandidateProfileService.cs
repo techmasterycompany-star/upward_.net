@@ -49,6 +49,34 @@ namespace Upward.Application.Services
             return await GetByUserIdOrThrowAsync(userId);
         }
 
+        public async Task<CandidateProfileDto?> UploadResumeAsync(long userId, IFormFile resumeFile)
+        {
+            var profile = await _candidateProfileRepository.GetByUserIdAsync(userId);
+
+            if (profile is null)
+            {
+                return null;
+            }
+
+            var oldPublicId = profile.ResumePublicId;
+
+            var resume = await UploadResumeAsync(resumeFile, required: true);
+
+            profile.ResumeUrl = resume.Url;
+            profile.ResumePublicId = resume.PublicId;
+            profile.UpdatedAt = DateTime.UtcNow;
+
+            _candidateProfileRepository.Update(profile);
+            await _candidateProfileRepository.SaveChangesAsync();
+
+            if (!string.IsNullOrWhiteSpace(oldPublicId))
+            {
+                await _storageService.DeleteAsync(oldPublicId);
+            }
+
+            return profile.ToDto();
+        }
+
         public async Task<CandidateProfileDto?> GetByUserIdAsync(long userId)
         {
             var profile = await _candidateProfileRepository.GetByUserIdAsync(userId);
@@ -109,6 +137,8 @@ namespace Upward.Application.Services
             {
                 throw new ArgumentException(validationResult.ErrorMesssage ?? "Invalid resume file.");
             }
+
+            stream.Position = 0;
 
             var uploadResult = await _storageService.UploadAsync(stream, resumeFile.FileName, resumeFile.ContentType, "resumes");
             var url = string.IsNullOrWhiteSpace(uploadResult.SecureUrl) ? uploadResult.Url : uploadResult.SecureUrl;

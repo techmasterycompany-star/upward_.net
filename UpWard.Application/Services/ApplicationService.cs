@@ -190,6 +190,8 @@ namespace Upward.Application.Services
                 throw new ArgumentException(validationResult.ErrorMesssage ?? "Invalid resume file.");
             }
 
+            stream.Position = 0;
+
             var uploadResult = await _storageService.UploadAsync(
                 stream,
                 resumeFile.FileName,

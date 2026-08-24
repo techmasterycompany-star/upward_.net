@@ -99,6 +99,32 @@ public class CandidateProfileController : ControllerBase
         }
     }
 
+    [HttpPut("resume")]
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> UploadResume([FromForm] IFormFile resumeFile)
+    {
+        try
+        {
+            var userId = ClaimsHelper.GetUserId(User);
+
+            var profile = await _candidateProfileService.UploadResumeAsync(userId, resumeFile);
+
+            return profile is null? NotFound(new { message = "Candidate profile not found." }) : Ok(profile);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An unexpected error occurred." });
+        }
+    }
+
     [HttpPost("skills")]
     public async Task<IActionResult> AddSkill(
         [FromBody] CandidateSkillInputDto request)
