@@ -21,6 +21,9 @@ namespace Upward.Infrastructure
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IAdminDashboardRepository, AdminDashboardRepository>();
             services.AddScoped<IEmployerRepository, EmployerRepository>();
+            services.AddScoped<IEmployerJobRepository, EmployerJobRepository>();
+            services.AddScoped<IEmployerApplicationRepository, EmployerApplicationRepository>();
+            services.AddScoped<IEmployerAnalyticsRepository, EmployerAnalyticsRepository>();
 
             return services;
         }

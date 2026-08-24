@@ -22,6 +22,9 @@ namespace Upward.Application
             services.AddScoped<IAdminDashboardService, AdminDashboardService>();
 
             services.AddScoped<IEmployerService, EmployerService>();
+            services.AddScoped<IEmployerJobService, EmployerJobService>();
+            services.AddScoped<IEmployerApplicationService, EmployerApplicationService>();
+            services.AddScoped<IEmployerAnalyticsService, EmployerAnalyticsService>();
 
             return services;
         }
