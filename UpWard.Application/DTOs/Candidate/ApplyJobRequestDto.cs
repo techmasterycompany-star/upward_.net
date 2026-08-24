@@ -17,5 +17,16 @@ namespace Upward.Application.DTOs.Candidate
         public bool ConfirmContactInformation { get; set; }
     }
 
+    public class ApplyUsingProfileDto
+    {
+
+        public string? CoverLetter { get; set; }
+
+        public string? Message { get; set; }
+
+        public string ContactPhone { get; set; } = null!;
+
+    }
+
 
 }

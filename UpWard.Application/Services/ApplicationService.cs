@@ -12,12 +12,14 @@ namespace Upward.Application.Services
     public class ApplicationService : IApplicationService
     {
         private readonly IApplicationRepository _applicationRepository;
+        private readonly ICandidateProfileRepository _candidateProfileRepository;
         private readonly IJobRepository _jobRepository;
         private readonly IStorageService _storageService;
 
-        public ApplicationService(IApplicationRepository applicationRepository, IJobRepository jobRepository, IStorageService storageService)
+        public ApplicationService(IApplicationRepository applicationRepository, ICandidateProfileRepository candidateProfileRepository,IJobRepository jobRepository, IStorageService storageService)
         {
             _applicationRepository = applicationRepository;
+            _candidateProfileRepository = candidateProfileRepository;
             _jobRepository = jobRepository;
             _storageService = storageService;
         }
@@ -68,6 +70,60 @@ namespace Upward.Application.Services
                 CoverLetter = Normalize(request.CoverLetter),
                 Message = Normalize(request.Message),
                 ContactEmail = request.ContactEmail.Trim(),
+                ContactPhone = request.ContactPhone.Trim(),
+                Status = ApplicationStatus.Submitted,
+                AppliedViaLinkedIn = false
+            };
+
+            await _applicationRepository.AddAsync(application);
+            await _applicationRepository.SaveChangesAsync();
+
+            application.Job = job;
+
+            return application.ToDto();
+        }
+        public async Task<ApplicationDto> ApplyUsingProfileAsync(long candidateId, long jobId, ApplyUsingProfileDto request)
+        {
+            var profile = await _candidateProfileRepository.GetByUserIdAsync(candidateId);
+
+            if (profile == null)
+            {
+                throw new KeyNotFoundException("Profile not found.");
+
+            }
+
+            var job = await _jobRepository.GetByIdAsync(jobId);
+
+            if (job is null)
+            {
+                throw new KeyNotFoundException("Job not found.");
+            }
+
+            if (job.Status != JobStatus.Approved)
+            {
+                throw new InvalidOperationException("You can only apply to approved jobs.");
+            }
+
+            var alreadyApplied = await _applicationRepository.ExistsNotCancelledAsync(jobId, candidateId);
+
+            if (alreadyApplied)
+            {
+                throw new InvalidOperationException("You have already applied to this job.");
+            }
+
+            if(profile.ResumeUrl == null)
+            {
+                throw new InvalidOperationException("You must upload a resume before applying for a job.");
+            }
+
+            var application = new JobApplication
+            {
+                JobId = jobId,
+                CandidateId = candidateId,
+                Resume = profile.ResumeUrl ?? string.Empty,
+                CoverLetter = Normalize(request.CoverLetter),
+                Message = Normalize(request.Message),
+                ContactEmail = profile.User.Email,
                 ContactPhone = request.ContactPhone.Trim(),
                 Status = ApplicationStatus.Submitted,
                 AppliedViaLinkedIn = false

@@ -45,6 +45,31 @@ namespace Upward.API.Controllers
             }
         }
 
+        [HttpPost("jobs/{jobId:long}/using-profile")]
+        public async Task<IActionResult> ApplyUsingProfile(long jobId, ApplyUsingProfileDto applyDto)
+        {
+
+            try
+            {
+                var userId = ClaimsHelper.GetUserId(User);
+                var application = await _applicationService.ApplyUsingProfileAsync(userId, jobId, applyDto);
+
+                return Ok(application);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetMyApplications()
         {
