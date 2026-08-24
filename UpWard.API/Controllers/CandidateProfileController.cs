@@ -158,10 +158,7 @@ public class CandidateProfileController : ControllerBase
         try
         {
             var userId = ClaimsHelper.GetUserId(User);
-            var profile = await _skillsService.UpdateSkillAsync(
-                userId,
-                candidateSkillId,
-                request);
+            var profile = await _skillsService.UpdateSkillAsync(userId, candidateSkillId, request);
 
             return profile is null? NotFound(new { message = "Candidate profile or skill not found." }) : Ok("Skill Updated Successfully");
         }
@@ -186,9 +183,7 @@ public class CandidateProfileController : ControllerBase
         {
             var userId = ClaimsHelper.GetUserId(User);
 
-            var profile = await _skillsService.RemoveSkillAsync(
-                userId,
-                candidateSkillId);
+            var profile = await _skillsService.RemoveSkillAsync(userId, candidateSkillId);
 
             return profile is null? NotFound(new { message = "Candidate profile or skill not found." }) : Ok("Skill Removed Successfully");
         }
@@ -202,15 +197,15 @@ public class CandidateProfileController : ControllerBase
         }
     }
 
-    [HttpPost("skills/bulk")]
-    public async Task<IActionResult> AddSkillsBulk([FromBody] UpdateCandidateSkillsDto request)
+    [HttpPut("skills")]
+    public async Task<IActionResult> UpdateSkills([FromBody] UpdateCandidateSkillsDto request)
     {
         try
         {
-            var userId = ClaimsHelper.GetUserId(User); 
+            var userId = ClaimsHelper.GetUserId(User);
             var profile = await _skillsService.UpdateSkillsAsync(userId, request);
 
-            return profile is null? NotFound(new { message = "Candidate profile not found." }) : Ok("Skills Added Successfully");
+            return profile is null? NotFound(new { message = "Candidate profile not found." }) : Ok("Skills Updated Successfully");
         }
         catch (ArgumentException ex)
         {
@@ -220,9 +215,10 @@ public class CandidateProfileController : ControllerBase
         {
             return Unauthorized(new { message = ex.Message });
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return StatusCode(500, new { message = "An unexpected error occurred." });
         }
     }
 }
+

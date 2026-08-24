@@ -1,7 +1,7 @@
 ﻿using Upward.Application.DTOs.Candidate;
-using Upward.Application.Mappings;
 using Upward.Application.Interfaces.IRepo;
 using Upward.Application.Interfaces.IService;
+using Upward.Application.Mappings;
 using Upward.Domain.Entities;
 
 namespace Upward.Application.Services
@@ -11,9 +11,7 @@ namespace Upward.Application.Services
         private readonly ICandidateProfileRepository _candidateProfileRepository;
         private readonly ISkillsRepository _skillsRepository;
 
-        public SkillsService(
-            ICandidateProfileRepository candidateProfileRepository,
-            ISkillsRepository skillsRepository)
+        public SkillsService(ICandidateProfileRepository candidateProfileRepository, ISkillsRepository skillsRepository)
         {
             _candidateProfileRepository = candidateProfileRepository;
             _skillsRepository = skillsRepository;
@@ -21,53 +19,44 @@ namespace Upward.Application.Services
 
         public async Task<CandidateProfileDto?> AddSkillAsync(long userId, CandidateSkillInputDto request)
         {
-            return await UpsertSkillsAsync(userId, new[] { request }, removeMissing: false);
-        }
+            ValidateSkill(request);
 
-        public Task<CandidateProfileDto?> AddSkillsBulkAsync(long userId, UpdateCandidateSkills request)
-        {
-            var skills = ParseSkillsCsv(request.Skills)
-                .Select(name => new CandidateSkillInputDto
-                {
-                    Name = name,
-                    YearsExperience = request.YearsExperience
-                });
-
-            return UpsertSkillsAsync(userId, skills, removeMissing: false);
+            return await UpsertSkillsAsync(userId, new[] { request }, false);
         }
 
         public async Task<CandidateProfileDto?> UpdateSkillAsync(long userId, long candidateSkillId, CandidateSkillInputDto request)
         {
+            ValidateSkill(request);
+
             var profile = await _candidateProfileRepository.GetByUserIdAsync(userId);
 
             if (profile is null)
-            {
                 return null;
-            }
 
             var candidateSkill = profile.CandidateSkills.FirstOrDefault(x => x.Id == candidateSkillId);
 
             if (candidateSkill is null)
-            {
                 return null;
-            }
 
             var normalizedName = NormalizeSkillName(request.Name);
-            if (string.IsNullOrWhiteSpace(normalizedName))
-            {
-                throw new ArgumentException("Skill name is required.", nameof(request));
-            }
+            var yearsExperience = request.YearsExperience;
 
-            var yearsExperience = request.YearsExperience < 0 ? 0 : request.YearsExperience;
             var targetSkill = await _skillsRepository.GetByNameAsync(normalizedName);
 
             if (targetSkill is null)
             {
-                targetSkill = new Skill { Name = normalizedName };
+                targetSkill = new Skill
+                {
+                    Name = normalizedName
+                };
+
                 await _skillsRepository.AddAsync(targetSkill);
             }
 
-            var duplicateRelation = profile.CandidateSkills.FirstOrDefault(x => x.Id != candidateSkillId && x.Skill is not null && string.Equals(x.Skill.Name, normalizedName, StringComparison.OrdinalIgnoreCase));
+            var duplicateRelation = profile.CandidateSkills.FirstOrDefault(x =>
+                x.Id != candidateSkillId &&
+                x.Skill is not null &&
+                string.Equals(x.Skill.Name, normalizedName, StringComparison.OrdinalIgnoreCase));
 
             if (duplicateRelation is not null)
             {
@@ -82,6 +71,7 @@ namespace Upward.Application.Services
             }
 
             profile.UpdatedAt = DateTime.UtcNow;
+
             _candidateProfileRepository.Update(profile);
             await _candidateProfileRepository.SaveChangesAsync();
 
@@ -93,16 +83,12 @@ namespace Upward.Application.Services
             var profile = await _candidateProfileRepository.GetByUserIdAsync(userId);
 
             if (profile is null)
-            {
                 return null;
-            }
 
             var candidateSkill = profile.CandidateSkills.FirstOrDefault(x => x.Id == candidateSkillId);
 
             if (candidateSkill is null)
-            {
                 return null;
-            }
 
             profile.CandidateSkills.Remove(candidateSkill);
             profile.UpdatedAt = DateTime.UtcNow;
@@ -113,21 +99,9 @@ namespace Upward.Application.Services
             return profile.ToDto();
         }
 
-        public Task<CandidateProfileDto?> UpdateSkillsAsync(long userId, UpdateCandidateSkills request)
+        public async Task<CandidateProfileDto?> UpdateSkillsAsync(long userId, UpdateCandidateSkillsDto request)
         {
-            var skills = ParseSkillsCsv(request.Skills)
-                .Select(name => new CandidateSkillInputDto
-                {
-                    Name = name,
-                    YearsExperience = request.YearsExperience
-                });
-
-            return UpsertSkillsAsync(userId, skills, removeMissing: true);
-        }
-
-        public Task<CandidateProfileDto?> UpdateSkillsAsync(long userId, UpdateCandidateSkillsDto request)
-        {
-            return UpsertSkillsAsync(userId, request.Skills, removeMissing: true);
+            return await UpsertSkillsAsync(userId, request.Skills, true);
         }
 
         private async Task<CandidateProfileDto?> UpsertSkillsAsync(long userId, IEnumerable<CandidateSkillInputDto> requestSkills, bool removeMissing)
@@ -135,9 +109,7 @@ namespace Upward.Application.Services
             var profile = await _candidateProfileRepository.GetByUserIdAsync(userId);
 
             if (profile is null)
-            {
                 return null;
-            }
 
             var desiredSkills = NormalizeSkills(requestSkills);
             var desiredNames = desiredSkills.Keys.ToHashSet(StringComparer.OrdinalIgnoreCase);
@@ -148,11 +120,11 @@ namespace Upward.Application.Services
 
             if (removeMissing)
             {
-                var toRemove = profile.CandidateSkills
-                    .Where(x => x.Skill is not null && !desiredNames.Contains(NormalizeSkillName(x.Skill!.Name)))
+                var skillsToRemove = profile.CandidateSkills
+                    .Where(x => x.Skill is not null && !desiredNames.Contains(NormalizeSkillName(x.Skill.Name)))
                     .ToList();
 
-                foreach (var candidateSkill in toRemove)
+                foreach (var candidateSkill in skillsToRemove)
                 {
                     profile.CandidateSkills.Remove(candidateSkill);
                 }
@@ -170,7 +142,11 @@ namespace Upward.Application.Services
 
                 if (skill is null)
                 {
-                    skill = new Skill { Name = skillName };
+                    skill = new Skill
+                    {
+                        Name = skillName
+                    };
+
                     await _skillsRepository.AddAsync(skill);
                 }
 
@@ -183,6 +159,7 @@ namespace Upward.Application.Services
             }
 
             profile.UpdatedAt = DateTime.UtcNow;
+
             _candidateProfileRepository.Update(profile);
             await _candidateProfileRepository.SaveChangesAsync();
 
@@ -198,33 +175,33 @@ namespace Upward.Application.Services
                 var name = NormalizeSkillName(skill.Name);
 
                 if (string.IsNullOrWhiteSpace(name))
-                {
                     continue;
-                }
+
+                if (skill.YearsExperience < 0)
+                    throw new ArgumentException("Years of experience cannot be negative.");
 
                 normalized[name] = new CandidateSkillInputDto
                 {
                     Name = name,
-                    YearsExperience = skill.YearsExperience < 0 ? 0 : skill.YearsExperience
+                    YearsExperience = skill.YearsExperience
                 };
             }
 
             return normalized;
         }
 
-        private static IEnumerable<string> ParseSkillsCsv(string skills)
+        private static void ValidateSkill(CandidateSkillInputDto request)
         {
-            return skills
-                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                .Where(x => !string.IsNullOrWhiteSpace(x))
-                .Select(NormalizeSkillName)
-                .Distinct(StringComparer.OrdinalIgnoreCase);
+            if (string.IsNullOrWhiteSpace(request.Name))
+                throw new ArgumentException("Skill name is required.");
+
+            if (request.YearsExperience < 0)
+                throw new ArgumentException("Years of experience cannot be negative.");
         }
 
         private static string NormalizeSkillName(string name)
         {
             return name.Trim();
         }
-
     }
 }
