@@ -6,6 +6,7 @@ namespace Upward.Application.DTOs.Employer
         public string Description { get; set; } = null!;
         public string Responsibilities { get; set; } = null!;
         public string Requirements { get; set; } = null!;
+        public string? Benefits { get; set; }
         public string? Location { get; set; }
         public string WorkType { get; set; } = null!;
         public decimal? SalaryMin { get; set; }

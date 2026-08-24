@@ -42,6 +42,7 @@ namespace Upward.Application.Services
                 Description = request.Description,
                 Responsibilities = request.Responsibilities,
                 Requirements = request.Requirements,
+                Benefits = request.Benefits,
                 Location = request.Location,
                 WorkType = Enum.Parse<WorkType>(request.WorkType),
                 SalaryMin = request.SalaryMin,
@@ -76,6 +77,7 @@ namespace Upward.Application.Services
             if (request.Description != null) job.Description = request.Description;
             if (request.Responsibilities != null) job.Responsibilities = request.Responsibilities;
             if (request.Requirements != null) job.Requirements = request.Requirements;
+            if (request.Benefits != null) job.Benefits = request.Benefits;
             if (request.Location != null) job.Location = request.Location;
             if (request.WorkType != null) job.WorkType = Enum.Parse<WorkType>(request.WorkType);
             if (request.SalaryMin.HasValue) job.SalaryMin = request.SalaryMin;
@@ -122,6 +124,7 @@ namespace Upward.Application.Services
             Description = j.Description,
             Responsibilities = j.Responsibilities,
             Requirements = j.Requirements,
+            Benefits = j.Benefits,
             Location = j.Location,
             WorkType = j.WorkType.ToString(),
             SalaryMin = j.SalaryMin,

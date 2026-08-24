@@ -17,6 +17,8 @@ namespace Upward.Domain.Entities
 
         public string Requirements { get; set; } = null!;
 
+        public string? Benefits { get; set; }
+
         public string? Location { get; set; }
 
         public WorkType WorkType { get; set; }
