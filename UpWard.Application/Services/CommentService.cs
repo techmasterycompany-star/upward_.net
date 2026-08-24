@@ -39,7 +39,7 @@ namespace Upward.Application.Services
             if (string.IsNullOrWhiteSpace(request.Content))
                 throw new ArgumentException("Comment content is required.");
 
-            var comment = await _commentRepository.GetByIdAsync(commentId);
+            var comment = await _commentRepository.GetCommentByIdAsync(commentId);
 
             if (comment is null)
                 return null;
@@ -58,7 +58,7 @@ namespace Upward.Application.Services
 
         public async Task<bool> DeleteAsync(long userId, long commentId)
         {
-            var comment = await _commentRepository.GetByIdAsync(commentId);
+            var comment = await _commentRepository.GetCommentByIdAsync(commentId);
 
             if (comment is null)
                 return false;

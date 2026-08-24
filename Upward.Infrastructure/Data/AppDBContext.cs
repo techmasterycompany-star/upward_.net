@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Upward.Domain.Entities;
-using JobApplication = Upward.Domain.Entities.Application;
 using Upward.Infrastructure.Data.Configurations;
 
 namespace Upward.Infrastructure.Data

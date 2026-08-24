@@ -1,13 +1,14 @@
 using Upward.Application.DTOs.Employer;
+using Upward.Domain.Entities;
 
 namespace Upward.Application.Interfaces.IRepo
 {
     public interface IEmployerApplicationRepository
     {
-        Task<List<Upward.Domain.Entities.Application>> GetByJobIdAsync(long jobId);
-        Task<List<Upward.Domain.Entities.Application>> GetByEmployerIdAsync(long employerId);
-        Task<Upward.Domain.Entities.Application?> GetByIdAsync(long id);
-        void Update(Upward.Domain.Entities.Application application);
+        Task<List<JobApplication>> GetByJobIdAsync(long jobId);
+        Task<List<JobApplication>> GetByEmployerIdAsync(long employerId);
+        Task<JobApplication?> GetByIdAsync(long id);
+        void Update(JobApplication application);
         Task<bool> ExistsByJobEmployerAsync(long applicationId, long employerId);
     }
 }

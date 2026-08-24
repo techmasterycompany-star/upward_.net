@@ -1,6 +1,7 @@
 using Upward.Application.DTOs.Employer;
 using Upward.Application.Interfaces.IRepo;
 using Upward.Application.Interfaces.IService;
+using Upward.Domain.Entities;
 using Upward.Domain.Enums;
 
 namespace Upward.Application.Services
@@ -72,7 +73,7 @@ namespace Upward.Application.Services
             return MapToDto(application);
         }
 
-        private static ApplicationDto MapToDto(Domain.Entities.Application a) => new()
+        private static ApplicationDto MapToDto(JobApplication a) => new()
         {
             Id = a.Id,
             JobId = a.JobId,
@@ -82,7 +83,7 @@ namespace Upward.Application.Services
             CandidateEmail = a.Candidate?.User?.Email ?? "",
             CandidateHeadline = a.Candidate?.Headline,
             CandidateLocation = a.Candidate?.Location,
-            CandidateResume = a.Candidate?.Resume,
+            CandidateResume = a.Candidate?.ResumeUrl,
             CandidateLinkedin = a.Candidate?.LinkedinProfile,
             CandidateSkills = a.Candidate?.CandidateSkills?.Select(cs => cs.Skill.Name).ToList() ?? new(),
             CoverLetter = a.CoverLetter,

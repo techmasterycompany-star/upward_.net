@@ -10,29 +10,78 @@ namespace Upward.Infrastructure.Repositories
 {
     public class JobRepository : IJobRepository
     {
-        private readonly AppDBContext context;
-        public JobRepository(AppDBContext context) => this.context = context;
         private readonly AppDBContext _context;
 
-
-        public async Task<List<Job>> GetAllJobsAsync() => 
-            await context.Jobs
-        public async Task<PagedResultDto<JobSearchResultDto>> SearchAsync(JobSearchRequestDto request)
+        public JobRepository(AppDBContext context)
         {
-            IQueryable<Job> query = _context.Jobs
-                .AsNoTracking()
+            _context = context;
+        }
+
+        // Admin
+        public async Task<List<Job>> GetAllJobsAsync()
+        {
+            return await _context.Jobs
                 .Include(j => j.Employer)
                 .Include(j => j.Category)
                 .Where(j => !j.IsDeleted)
                 .OrderByDescending(j => j.CreatedAt)
-                .Where(j =>!j.IsDeleted && (j.Status == JobStatus.Approved || j.Status == JobStatus.Closed));
+                .ToListAsync();
+        }
+
+        public async Task<List<Job>> GetPendingJobsAsync()
+        {
+            return await _context.Jobs
+                .Include(j => j.Employer)
+                .Include(j => j.Category)
+                .Where(j => !j.IsDeleted &&
+                            j.Status == JobStatus.PendingApproval)
+                .OrderByDescending(j => j.CreatedAt)
+                .ToListAsync();
+        }
+
+        public async Task<Job?> GetJobByIdAsync(long id)
+        {
+            return await _context.Jobs
+                .Include(j => j.Employer)
+                .Include(j => j.Category)
+                .FirstOrDefaultAsync(j => j.Id == id && !j.IsDeleted);
+        }
+
+        public async Task ApproveJobAsync(Job job)
+        {
+            job.Status = JobStatus.Approved;
+            job.RejectionReason = null;
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task RejectJobAsync(Job job)
+        {
+            job.Status = JobStatus.Rejected;
+
+            await _context.SaveChangesAsync();
+        }
+
+        // Job Search
+        public async Task<PagedResultDto<JobSearchResultDto>> SearchAsync(
+            JobSearchRequestDto request)
+        {
+            IQueryable<Job> query = _context.Jobs
+                .AsNoTracking()
+                .Include(j => j.Employer)
+                .Where(j =>
+                    !j.IsDeleted &&
+                    (j.Status == JobStatus.Approved ||
+                     j.Status == JobStatus.Closed));
 
             // Keyword
             if (!string.IsNullOrWhiteSpace(request.Keyword))
             {
                 var keyword = request.Keyword.Trim();
 
-                query = query.Where(j => j.Title.Contains(keyword) || j.Description.Contains(keyword));
+                query = query.Where(j =>
+                    j.Title.Contains(keyword) ||
+                    j.Description.Contains(keyword));
             }
 
             // Location
@@ -40,84 +89,98 @@ namespace Upward.Infrastructure.Repositories
             {
                 var location = request.Location.Trim();
 
-                query = query.Where(j => j.Location != null &&  j.Location.Contains(location));
+                query = query.Where(j =>
+                    j.Location != null &&
+                    j.Location.Contains(location));
             }
 
             // Category
             if (request.CategoryId.HasValue)
             {
-                query = query.Where(j => j.CategoryId == request.CategoryId.Value);
+                query = query.Where(j =>
+                    j.CategoryId == request.CategoryId.Value);
             }
 
             // Work Type
             if (request.WorkType.HasValue)
             {
-                query = query.Where(j => j.WorkType == request.WorkType.Value);
+                query = query.Where(j =>
+                    j.WorkType == request.WorkType.Value);
             }
 
             // Salary
             if (request.MinSalary.HasValue)
             {
-                query = query.Where(j => j.SalaryMax.HasValue && j.SalaryMax.Value >= request.MinSalary.Value);
+                query = query.Where(j =>
+                    j.SalaryMax.HasValue &&
+                    j.SalaryMax.Value >= request.MinSalary.Value);
             }
 
             if (request.MaxSalary.HasValue)
             {
-                query = query.Where(j => j.SalaryMin.HasValue && j.SalaryMin.Value <= request.MaxSalary.Value);
+                query = query.Where(j =>
+                    j.SalaryMin.HasValue &&
+                    j.SalaryMin.Value <= request.MaxSalary.Value);
             }
 
             // Experience Level
             if (request.ExperienceLevel.HasValue)
             {
-                query = query.Where(j => j.ExperienceLevel == request.ExperienceLevel.Value);
+                query = query.Where(j =>
+                    j.ExperienceLevel == request.ExperienceLevel.Value);
             }
 
             // Date Posted
-            if (request.PostedAfter.HasValue && request.PostedAfter.Value != DatePostedFilter.AnyTime)
+            if (request.PostedAfter.HasValue &&
+                request.PostedAfter.Value != DatePostedFilter.AnyTime)
             {
                 var date = GetPostedAfterDate(request.PostedAfter.Value);
 
                 query = query.Where(j => j.CreatedAt >= date);
             }
 
-            // Total count
             var totalCount = await query.CountAsync();
 
             // Sorting
             query = ApplySorting(query, request);
 
             // Pagination
-            var page = request.Page < 1? 1 : request.Page;
+            var page = request.Page < 1 ? 1 : request.Page;
 
-            var pageSize = request.PageSize <= 0? 10 : Math.Min(request.PageSize, 100);
+            var pageSize = request.PageSize <= 0
+                ? 10
+                : Math.Min(request.PageSize, 100);
 
             var items = await query
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Select(j => j.ToSearchResultDto())
                 .ToListAsync();
-        public async Task<List<Job>> GetPendingJobsAsync() => 
-            await context.Jobs
-                .Include(j => j.Employer)
 
             return new PagedResultDto<JobSearchResultDto>
             {
                 Items = items,
                 PageSize = pageSize,
                 Page = page,
-                TotalCount = totalCount,
+                TotalCount = totalCount
             };
         }
 
-        private static IQueryable<Job> ApplySorting(IQueryable<Job> query, JobSearchRequestDto request)
+        private static IQueryable<Job> ApplySorting(
+            IQueryable<Job> query,
+            JobSearchRequestDto request)
         {
             return request.SortBy switch
             {
-                JobSortBy.Salary => request.SortDirection == SortDirection.Ascending
-                        ? query.OrderBy(j => j.SalaryMin) : query.OrderByDescending(j => j.SalaryMin),
+                JobSortBy.Salary =>
+                    request.SortDirection == SortDirection.Ascending
+                        ? query.OrderBy(j => j.SalaryMin)
+                        : query.OrderByDescending(j => j.SalaryMin),
 
-                JobSortBy.DatePosted => request.SortDirection == SortDirection.Ascending
-                        ? query.OrderBy(j => j.CreatedAt) : query.OrderByDescending(j => j.CreatedAt),
+                JobSortBy.DatePosted =>
+                    request.SortDirection == SortDirection.Ascending
+                        ? query.OrderBy(j => j.CreatedAt)
+                        : query.OrderByDescending(j => j.CreatedAt),
 
                 _ => query.OrderByDescending(j => j.CreatedAt)
             };
@@ -129,7 +192,7 @@ namespace Upward.Infrastructure.Repositories
 
             return filter switch
             {
-                DatePostedFilter.Today =>  now.Date,
+                DatePostedFilter.Today => now.Date,
                 DatePostedFilter.Last3Days => now.AddDays(-3),
                 DatePostedFilter.Last7Days => now.AddDays(-7),
                 DatePostedFilter.Last30Days => now.AddDays(-30),
@@ -137,16 +200,24 @@ namespace Upward.Infrastructure.Repositories
             };
         }
 
-        public async Task<Job?> GetByIdAsync(long jobId)
+        // Job Details
+        public async Task<Job?> GetApprovedJobByIdAsync(long jobId)
         {
             return await _context.Jobs
                 .AsNoTracking()
                 .Include(j => j.Category)
                 .Include(j => j.Employer)
-                .FirstOrDefaultAsync(j => j.Id == jobId && !j.IsDeleted && j.Status == JobStatus.Approved);
+                .FirstOrDefaultAsync(j =>
+                    j.Id == jobId &&
+                    !j.IsDeleted &&
+                    j.Status == JobStatus.Approved);
         }
 
-        public async Task<JobView?> GetExistingViewAsync(long jobId, long? userId, string? ipAddress)
+        // Job Views
+        public async Task<JobView?> GetExistingViewAsync(
+            long jobId,
+            long? userId,
+            string? ipAddress)
         {
             if (userId.HasValue)
             {
@@ -175,15 +246,20 @@ namespace Upward.Infrastructure.Repositories
         {
             await _context.Jobs
                 .Where(j => j.Id == jobId)
-                .ExecuteUpdateAsync(setters => setters.SetProperty(j => j.ViewsCount, j => j.ViewsCount + 1));
+                .ExecuteUpdateAsync(setters =>
+                    setters.SetProperty(
+                        j => j.ViewsCount,
+                        j => j.ViewsCount + 1));
         }
 
+        // Saved Searches
         public async Task AddSavedSearchAsync(SavedSearch savedSearch)
         {
             await _context.SavedSearches.AddAsync(savedSearch);
         }
 
-        public async Task<List<SavedSearch>> GetSavedSearchesAsync(long candidateId)
+        public async Task<List<SavedSearch>> GetSavedSearchesAsync(
+            long candidateId)
         {
             return await _context.SavedSearches
                 .AsNoTracking()
@@ -193,10 +269,14 @@ namespace Upward.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<SavedSearch?> GetSavedSearchByIdAsync(long candidateId, long savedSearchId)
+        public async Task<SavedSearch?> GetSavedSearchByIdAsync(
+            long candidateId,
+            long savedSearchId)
         {
             return await _context.SavedSearches
-                .FirstOrDefaultAsync(x => x.Id == savedSearchId && x.CandidateId == candidateId);
+                .FirstOrDefaultAsync(x =>
+                    x.Id == savedSearchId &&
+                    x.CandidateId == candidateId);
         }
 
         public void RemoveSavedSearch(SavedSearch savedSearch)
@@ -205,7 +285,7 @@ namespace Upward.Infrastructure.Repositories
         }
 
         public async Task SaveChangesAsync()
-        public async Task RejectJobAsync(Job job)
+        {
             await _context.SaveChangesAsync();
         }
     }

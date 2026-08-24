@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,5 +11,10 @@ namespace Upward.Application.DTOs.Candidate
     {
         public bool IsValid { get; set; }
         public string? ErrorMesssage { get; set; }
+    }
+
+    public class UploadResumeRequest
+    {
+        public IFormFile File { get; set; } = null!;
     }
 }

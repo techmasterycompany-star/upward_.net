@@ -72,7 +72,7 @@ namespace Upward.Application.Services
                 Email = c.User?.Email ?? "",
                 Headline = c.Headline,
                 Location = c.Location,
-                Resume = c.Resume,
+                Resume = c.ResumeUrl,
                 Skills = c.CandidateSkills?.Select(cs => cs.Skill.Name).ToList() ?? new(),
                 IsDiscoverable = c.IsDiscoverable
             }).ToList();

@@ -28,7 +28,6 @@ namespace Upward.Infrastructure
             services.AddScoped<IJobRepository, JobRepository>();
             services.AddScoped<IApplicationRepository, ApplicationRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
-            services.AddScoped<IJobRepository, JobRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITechnologyRepository, TechnologyRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();

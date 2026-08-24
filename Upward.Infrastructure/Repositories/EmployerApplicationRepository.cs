@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Upward.Application.Interfaces.IRepo;
 using Upward.Domain.Entities;
 using Upward.Infrastructure.Data;
-using JobApplication = Upward.Domain.Entities.Application;
 
 namespace Upward.Infrastructure.Repositories
 {

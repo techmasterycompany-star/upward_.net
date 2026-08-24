@@ -41,7 +41,7 @@ namespace Upward.Application.Services
                 throw new ArgumentException("Contact phone is required.");
             }
 
-            var job = await _jobRepository.GetByIdAsync(jobId);
+            var job = await _jobRepository.GetApprovedJobByIdAsync(jobId);
 
             if (job is null)
             {
@@ -92,7 +92,7 @@ namespace Upward.Application.Services
 
             }
 
-            var job = await _jobRepository.GetByIdAsync(jobId);
+            var job = await _jobRepository.GetApprovedJobByIdAsync(jobId);
 
             if (job is null)
             {

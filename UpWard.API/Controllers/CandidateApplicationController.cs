@@ -10,11 +10,11 @@ namespace Upward.API.Controllers
     [Route("api/candidate/applications")]
     [ApiController]
     [Authorize(Roles = "Candidate")]
-    public class ApplicationController : ControllerBase
+    public class CandidateApplicationController : ControllerBase
     {
         private readonly IApplicationService _applicationService;
 
-        public ApplicationController(IApplicationService applicationService)
+        public CandidateApplicationController(IApplicationService applicationService)
         {
             _applicationService = applicationService;
         }

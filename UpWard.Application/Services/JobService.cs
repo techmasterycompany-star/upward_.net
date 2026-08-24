@@ -36,7 +36,7 @@ namespace Upward.Application.Services
 
         public async Task<JobDetailsDto> GetByIdAsync(long jobId)
         {
-            var job = await _jobRepository.GetByIdAsync(jobId);
+            var job = await _jobRepository.GetApprovedJobByIdAsync(jobId);
 
             if (job == null)
                 throw new KeyNotFoundException("Job not found.");
@@ -46,7 +46,7 @@ namespace Upward.Application.Services
 
         public async Task RecordViewAsync(long jobId, long? userId, string? ipAddress)
         {
-            var job = await _jobRepository.GetByIdAsync(jobId);
+            var job = await _jobRepository.GetApprovedJobByIdAsync(jobId);
 
             if (job == null)
                 throw new KeyNotFoundException("Job not found.");

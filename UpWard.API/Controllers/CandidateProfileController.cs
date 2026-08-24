@@ -101,13 +101,13 @@ public class CandidateProfileController : ControllerBase
 
     [HttpPut("resume")]
     [Consumes("multipart/form-data")]
-    public async Task<IActionResult> UploadResume([FromForm] IFormFile resumeFile)
+    public async Task<IActionResult> UploadResume([FromForm] UploadResumeRequest request)
     {
         try
         {
             var userId = ClaimsHelper.GetUserId(User);
 
-            var profile = await _candidateProfileService.UploadResumeAsync(userId, resumeFile);
+            var profile = await _candidateProfileService.UploadResumeAsync(userId, request.File);
 
             return profile is null? NotFound(new { message = "Candidate profile not found." }) : Ok(profile);
         }
