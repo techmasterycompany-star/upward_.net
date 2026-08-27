@@ -27,3 +27,5 @@ public class ApplicationConfiguration : IEntityTypeConfiguration<JobApplication>
             .OnDelete(DeleteBehavior.Restrict);
     }
 }
+
+

@@ -27,6 +27,9 @@ namespace Upward.Infrastructure.Data
         public DbSet<Plan> Plans => Set<Plan>();
         public DbSet<Subscription> Subscriptions => Set<Subscription>();
         public DbSet<Payment> Payments => Set<Payment>();
+        public DbSet<EmailVerificationToken> EmailVerificationTokens => Set<EmailVerificationToken>();
+        public DbSet<PasswordResetToken> PasswordResetTokens => Set<PasswordResetToken>();
+        public DbSet<RevokedToken> RevokedTokens => Set<RevokedToken>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

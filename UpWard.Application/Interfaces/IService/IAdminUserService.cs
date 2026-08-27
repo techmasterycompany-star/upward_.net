@@ -10,4 +10,5 @@ namespace Upward.Application.Interfaces.IService
         Task<bool> ActivateUserAsync(long id);
         Task<bool> DeleteUserAsync(long id);
     }
+   
 }

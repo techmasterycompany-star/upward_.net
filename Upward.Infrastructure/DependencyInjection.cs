@@ -3,6 +3,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Upward.Application.Interfaces.IRepo;
 using Upward.Application.Interfaces.IService;
+using Upward.Application.Interfaces.IService;
+using Upward.Application.Services;
 using Upward.Infrastructure.Data;
 using Upward.Infrastructure.FileStorage;
 using Upward.Infrastructure.Repositories;
@@ -36,6 +38,14 @@ namespace Upward.Infrastructure
             services.AddScoped<IEmployerJobRepository, EmployerJobRepository>();
             services.AddScoped<IEmployerApplicationRepository, EmployerApplicationRepository>();
             services.AddScoped<IEmployerAnalyticsRepository, EmployerAnalyticsRepository>();
+
+            // Auth feature
+            services.AddScoped<IUserAuthRepository, UserAuthRepository>();
+            services.AddScoped<IEmailVerificationTokenRepository, EmailVerificationTokenRepository>();
+            services.AddScoped<IPasswordResetTokenRepository, PasswordResetTokenRepository>();
+            services.AddScoped<IRevokedTokenRepository, RevokedTokenRepository>();
+
+  
 
             services.AddScoped<IStorageService, CloudinaryStorageService>();
             return services;

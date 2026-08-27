@@ -10,4 +10,5 @@ namespace Upward.Application.Interfaces.IRepo
         Task UpdateAsync(Technology technology);
         Task DeleteAsync(Technology technology);
     }
+
 }

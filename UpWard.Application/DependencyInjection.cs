@@ -21,6 +21,12 @@ namespace Upward.Application
             services.AddScoped<IAdminCommentService, AdminCommentService>();
             services.AddScoped<IAdminDashboardService, AdminDashboardService>();
 
+            // Auth feature
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
+            services.AddScoped<ITokenService, JwtTokenService>();
+            services.AddScoped<IEmailService, EmailService>();
+
             services.AddScoped<IEmployerService, EmployerService>();
             services.AddScoped<IEmployerJobService, EmployerJobService>();
             services.AddScoped<IEmployerApplicationService, EmployerApplicationService>();
