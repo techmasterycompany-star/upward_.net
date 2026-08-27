@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Upward.Application.Interfaces.IRepo;
+using Upward.Application.Interfaces.IService;
+using Upward.Application.Services;
 using Upward.Infrastructure.Data;
 using Upward.Infrastructure.Repositories;
 
@@ -20,7 +22,14 @@ namespace Upward.Infrastructure
             services.AddScoped<ITechnologyRepository, TechnologyRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IAdminDashboardRepository, AdminDashboardRepository>();
-            
+
+            // Auth feature
+            services.AddScoped<IUserAuthRepository, UserAuthRepository>();
+            services.AddScoped<IEmailVerificationTokenRepository, EmailVerificationTokenRepository>();
+            services.AddScoped<IPasswordResetTokenRepository, PasswordResetTokenRepository>();
+            services.AddScoped<IRevokedTokenRepository, RevokedTokenRepository>();
+
+  
 
             return services;
         }

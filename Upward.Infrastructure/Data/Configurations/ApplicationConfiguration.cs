@@ -1,7 +1,6 @@
 using JobApplication = Upward.Domain.Entities.Application;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Upward.Domain.Entities;
 
 namespace Upward.Infrastructure.Data.Configurations;
 
@@ -27,3 +26,5 @@ public class ApplicationConfiguration : IEntityTypeConfiguration<JobApplication>
             .OnDelete(DeleteBehavior.Restrict);
     }
 }
+
+
