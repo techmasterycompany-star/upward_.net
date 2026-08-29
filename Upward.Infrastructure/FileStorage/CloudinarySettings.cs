@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Upward.Infrastructure.FileStorage
+namespace Upwork.Infrastructure.FileStorage
 {
     public class CloudinarySettings
     {

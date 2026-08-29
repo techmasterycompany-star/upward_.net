@@ -1,6 +1,6 @@
-﻿using Upward.Application.DTOs.Admin;
+﻿using Upwork.Application.DTOs.Admin;
 
-namespace Upward.Application.Interfaces.IService
+namespace Upwork.Application.Interfaces.IService
 {
     public interface IAdminCategoryService
     {

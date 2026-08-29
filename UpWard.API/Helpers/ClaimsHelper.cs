@@ -1,6 +1,6 @@
 using System.Security.Claims;
 
-namespace Upward.API.Helpers
+namespace Upwork.API.Helpers
 {
     public static class ClaimsHelper
     {

@@ -1,4 +1,4 @@
-﻿namespace Upward.Application.DTOs.Candidate
+﻿namespace Upwork.Application.DTOs.Candidate
 {
     public class UpdateCandidateSkillsDto
     {

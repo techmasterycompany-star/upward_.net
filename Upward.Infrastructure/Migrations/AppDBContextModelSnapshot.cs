@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Upward.Infrastructure.Data;
+using Upwork.Infrastructure.Data;
 
 #nullable disable
 
-namespace Upward.Infrastructure.Migrations
+namespace Upwork.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDBContext))]
     partial class AppDBContextModelSnapshot : ModelSnapshot

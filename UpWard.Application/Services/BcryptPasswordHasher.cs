@@ -1,7 +1,7 @@
 ﻿using BCrypt.Net;
-using Upward.Application.Interfaces.IService;
+using Upwork.Application.Interfaces.IService;
 
-namespace Upward.Application.Services
+namespace Upwork.Application.Services
 {    
         public class BcryptPasswordHasher : IPasswordHasher
         {

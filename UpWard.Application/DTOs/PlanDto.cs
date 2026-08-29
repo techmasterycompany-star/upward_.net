@@ -1,4 +1,4 @@
-namespace Upward.Application.DTOs
+namespace Upwork.Application.DTOs
 {
     public class PlanDto
     {

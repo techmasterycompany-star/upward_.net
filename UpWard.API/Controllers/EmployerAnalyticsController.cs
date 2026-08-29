@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Upward.Application.DTOs.Employer;
-using Upward.Application.Interfaces.IService;
+using Upwork.Application.DTOs.Employer;
+using Upwork.Application.Interfaces.IService;
 
-namespace Upward.API.Controllers
+namespace Upwork.API.Controllers
 {
     [Route("api/employer/analytics")]
     [ApiController]

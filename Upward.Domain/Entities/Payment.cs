@@ -1,7 +1,8 @@
-using Upward.Domain.Common;
-using Upward.Domain.Enums;
 
-namespace Upward.Domain.Entities
+﻿using Upwork.Domain.Common;
+using Upwork.Domain.Enums;
+
+namespace Upwork.Domain.Entities
 {
     public class Payment : BaseEntity
     {

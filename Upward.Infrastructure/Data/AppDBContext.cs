@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Upward.Domain.Entities;
-using Upward.Infrastructure.Data.Configurations;
+using Upwork.Domain.Entities;
+using Upwork.Infrastructure.Data.Configurations;
 
-namespace Upward.Infrastructure.Data
+namespace Upwork.Infrastructure.Data
 {
     public class AppDBContext : DbContext
     {

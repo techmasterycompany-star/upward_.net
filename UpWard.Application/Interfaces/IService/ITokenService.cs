@@ -1,6 +1,6 @@
-﻿using Upward.Domain.Entities;
+﻿using Upwork.Domain.Entities;
 
-namespace Upward.Application.Interfaces.IService
+namespace Upwork.Application.Interfaces.IService
 {
     public class GeneratedToken
     {

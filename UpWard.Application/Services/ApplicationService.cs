@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Upward.Application.DTOs.Candidate;
-using Upward.Application.Interfaces.IRepo;
-using Upward.Application.Interfaces.IService;
-using Upward.Application.Mappings;
-using Upward.Application.Validators;
-using Upward.Domain.Entities;
-using Upward.Domain.Enums;
+using Upwork.Application.DTOs.Candidate;
+using Upwork.Application.Interfaces.IRepo;
+using Upwork.Application.Interfaces.IService;
+using Upwork.Application.Mappings;
+using Upwork.Application.Validators;
+using Upwork.Domain.Entities;
+using Upwork.Domain.Enums;
 
-namespace Upward.Application.Services
+namespace Upwork.Application.Services
 {
     public class ApplicationService : IApplicationService
     {

@@ -1,7 +1,7 @@
-﻿using Upward.Domain.Common;
-using Upward.Domain.Enums;
+﻿using Upwork.Domain.Common;
+using Upwork.Domain.Enums;
 
-namespace Upward.Domain.Entities
+namespace Upwork.Domain.Entities
 {
     public class CommentReport : BaseEntity
     {

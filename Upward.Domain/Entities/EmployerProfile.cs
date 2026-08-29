@@ -1,6 +1,6 @@
-﻿using Upward.Domain.Common;
+﻿using Upwork.Domain.Common;
 
-namespace Upward.Domain.Entities
+namespace Upwork.Domain.Entities
 {
     public class EmployerProfile : BaseEntity
     {

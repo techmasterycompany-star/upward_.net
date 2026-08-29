@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Upward.Domain.Entities;
-using Upward.Domain.Enums;
+using Upwork.Domain.Entities;
+using Upwork.Domain.Enums;
 
-namespace Upward.Infrastructure.Data
+namespace Upwork.Infrastructure.Data
 {
 
     public static class DbSeeder

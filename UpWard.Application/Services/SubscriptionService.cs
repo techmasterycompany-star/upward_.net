@@ -1,12 +1,12 @@
 using Microsoft.Extensions.Configuration;
 using Stripe;
 using Stripe.Checkout;
-using Upward.Application.DTOs;
-using Upward.Application.Interfaces;
-using Upward.Application.Interfaces.IRepo;
-using Upward.Domain.Enums;
+using Upwork.Application.DTOs;
+using Upwork.Application.Interfaces;
+using Upwork.Application.Interfaces.IRepo;
+using Upwork.Domain.Enums;
 
-namespace Upward.Application.Services
+namespace Upwork.Application.Services
 {
     public class SubscriptionService : ISubscriptionService
     {
@@ -89,7 +89,7 @@ namespace Upward.Application.Services
             var now = DateTime.UtcNow;
 
 
-            var subscription = new Upward.Domain.Entities.Subscription
+            var subscription = new Upwork.Domain.Entities.Subscription
             {
                 EmployerId          = employerId,
                 PlanId              = plan.Id,
@@ -106,7 +106,7 @@ namespace Upward.Application.Services
 
             await _subscriptionRepo.AddAsync(subscription);
 
-            var payment = new Upward.Domain.Entities.Payment
+            var payment = new Upwork.Domain.Entities.Payment
             {
                 SubscriptionId        = subscription.Id,
                 Amount                = amount,

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Upward.Domain.Entities;
+using Upwork.Domain.Entities;
 
-namespace Upward.Application.Interfaces.IRepo
+namespace Upwork.Application.Interfaces.IRepo
 {
     public interface ICandidateProfileRepository
     {

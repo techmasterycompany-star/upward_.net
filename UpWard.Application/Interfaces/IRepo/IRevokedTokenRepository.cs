@@ -1,4 +1,4 @@
-﻿namespace Upward.Application.Interfaces.IRepo
+﻿namespace Upwork.Application.Interfaces.IRepo
 {
     public interface IRevokedTokenRepository
     {

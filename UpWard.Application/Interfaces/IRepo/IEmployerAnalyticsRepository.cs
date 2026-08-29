@@ -1,10 +1,10 @@
-using Upward.Application.DTOs.Employer;
+using Upwork.Application.DTOs.Employer;
 
-namespace Upward.Application.Interfaces.IRepo
+namespace Upwork.Application.Interfaces.IRepo
 {
     public interface IEmployerAnalyticsRepository
     {
-        Task<List<Upward.Domain.Entities.Job>> GetJobsWithStatsAsync(long employerId);
-        Task<List<Upward.Domain.Entities.CandidateProfile>> SearchCandidatesAsync(string? keyword, List<string>? skills);
+        Task<List<Upwork.Domain.Entities.Job>> GetJobsWithStatsAsync(long employerId);
+        Task<List<Upwork.Domain.Entities.CandidateProfile>> SearchCandidatesAsync(string? keyword, List<string>? skills);
     }
 }

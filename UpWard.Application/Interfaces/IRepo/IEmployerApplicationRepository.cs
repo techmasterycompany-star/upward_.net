@@ -1,7 +1,7 @@
-using Upward.Application.DTOs.Employer;
-using Upward.Domain.Entities;
+using Upwork.Application.DTOs.Employer;
+using Upwork.Domain.Entities;
 
-namespace Upward.Application.Interfaces.IRepo
+namespace Upwork.Application.Interfaces.IRepo
 {
     public interface IEmployerApplicationRepository
     {

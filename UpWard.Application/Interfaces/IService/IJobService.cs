@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Upward.Application.DTOs.Common;
+using Upwork.Application.DTOs.Common;
 
-namespace Upward.Application.Interfaces.IService
+namespace Upwork.Application.Interfaces.IService
 {
     public interface IJobService
     {

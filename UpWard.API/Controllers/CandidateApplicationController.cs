@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Upward.API.Helpers;
-using Upward.Application.DTOs.Candidate;
-using Upward.Application.Interfaces.IService;
+using Upwork.API.Helpers;
+using Upwork.Application.DTOs.Candidate;
+using Upwork.Application.Interfaces.IService;
 
-namespace Upward.API.Controllers
+namespace Upwork.API.Controllers
 {
     [Route("api/candidate/applications")]
     [ApiController]

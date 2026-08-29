@@ -1,8 +1,8 @@
-﻿using Upward.Application.DTOs.Admin;
-using Upward.Application.Interfaces.IRepo;
-using Upward.Application.Interfaces.IService;
+﻿using Upwork.Application.DTOs.Admin;
+using Upwork.Application.Interfaces.IRepo;
+using Upwork.Application.Interfaces.IService;
 
-namespace Upward.Application.Services
+namespace Upwork.Application.Services
 {
     public class AdminCommentService : IAdminCommentService
     {

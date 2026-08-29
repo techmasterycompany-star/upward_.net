@@ -1,14 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Upward.Application.Interfaces.IRepo;
-using Upward.Domain.Entities;
-using Upward.Infrastructure.Data;
 
-namespace Upward.Infrastructure.Repositories
+using Upwork.Application.Interfaces.IRepo;
+using Upwork.Domain.Entities;
+using Upwork.Infrastructure.Data;
+
+namespace Upwork.Infrastructure.Repositories
 {
     public class EmployerRepository : IEmployerRepository
     {

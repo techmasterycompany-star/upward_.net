@@ -1,6 +1,6 @@
-using Upward.Application.DTOs.Employer;
+using Upwork.Application.DTOs.Employer;
 
-namespace Upward.Application.Interfaces.IService
+namespace Upwork.Application.Interfaces.IService
 {
     public interface IEmployerService
     {

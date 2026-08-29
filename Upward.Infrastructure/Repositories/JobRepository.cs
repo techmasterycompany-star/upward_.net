@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Upward.Application.DTOs.Common;
-using Upward.Application.Interfaces.IRepo;
-using Upward.Application.Mappings;
-using Upward.Domain.Entities;
-using Upward.Domain.Enums;
-using Upward.Infrastructure.Data;
+using Upwork.Application.DTOs.Common;
+using Upwork.Application.Interfaces.IRepo;
+using Upwork.Application.Mappings;
+using Upwork.Domain.Entities;
+using Upwork.Domain.Enums;
+using Upwork.Infrastructure.Data;
 
-namespace Upward.Infrastructure.Repositories
+namespace Upwork.Infrastructure.Repositories
 {
     public class JobRepository : IJobRepository
     {

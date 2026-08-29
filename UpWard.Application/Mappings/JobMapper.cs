@@ -1,7 +1,7 @@
-﻿using Upward.Application.DTOs.Common;
-using Upward.Domain.Entities;
+﻿using Upwork.Application.DTOs.Common;
+using Upwork.Domain.Entities;
 
-namespace Upward.Application.Mappings
+namespace Upwork.Application.Mappings
 {
     public static class JobMapper
     {

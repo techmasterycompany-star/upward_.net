@@ -1,7 +1,7 @@
-﻿using Upward.Domain.Entities;
-using Upward.Domain.Enums;
+﻿using Upwork.Domain.Entities;
+using Upwork.Domain.Enums;
 
-namespace Upward.Application.Interfaces.IRepo
+namespace Upwork.Application.Interfaces.IRepo
 {
     public interface IUserRepository
     {

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Upward.Application.DTOs.Common;
-using Upward.Domain.Entities;
+using Upwork.Application.DTOs.Common;
+using Upwork.Domain.Entities;
 
-namespace Upward.Application.Interfaces.IRepo
+namespace Upwork.Application.Interfaces.IRepo
 {
     public interface IJobRepository
     {

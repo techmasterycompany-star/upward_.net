@@ -1,11 +1,11 @@
 using Microsoft.Extensions.Configuration;
 using Stripe;
 using Stripe.Checkout;
-using Upward.Application.DTOs;
-using Upward.Application.Interfaces;
-using Upward.Domain.Enums;
+using Upwork.Application.DTOs;
+using Upwork.Application.Interfaces;
+using Upwork.Domain.Enums;
 
-namespace Upward.Infrastructure.Stripe
+namespace Upwork.Infrastructure.Stripe
 {
     public class StripeService : IStripeService
     {

@@ -1,10 +1,10 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.Extensions.Options;
-using Upward.Application.DTOs.Candidate;
-using Upward.Application.Interfaces.IService;
+using Upwork.Application.DTOs.Candidate;
+using Upwork.Application.Interfaces.IService;
 
-namespace Upward.Infrastructure.FileStorage
+namespace Upwork.Infrastructure.FileStorage
 {
     public class CloudinaryStorageService : IStorageService
     {

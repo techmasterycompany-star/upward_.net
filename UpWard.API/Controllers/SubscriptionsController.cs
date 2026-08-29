@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Upward.Application.DTOs;
-using Upward.Application.Interfaces;
+using Upwork.Application.DTOs;
+using Upwork.Application.Interfaces;
 
-namespace Upward.API.Controllers
+namespace Upwork.API.Controllers
 {
     [ApiController]
     [Route("api/subscriptions")]

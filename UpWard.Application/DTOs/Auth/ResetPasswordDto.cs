@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Upward.Application.DTOs.Auth
+namespace Upwork.Application.DTOs.Auth
 {
     public class ResetPasswordDto
     {

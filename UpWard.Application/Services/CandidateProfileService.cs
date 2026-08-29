@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Upward.Application.DTOs.Candidate;
-using Upward.Application.Mappings;
-using Upward.Application.Interfaces.IRepo;
-using Upward.Application.Interfaces.IService;
-using Upward.Application.Validators;
-using Upward.Domain.Entities;
+using Upwork.Application.DTOs.Candidate;
+using Upwork.Application.Mappings;
+using Upwork.Application.Interfaces.IRepo;
+using Upwork.Application.Interfaces.IService;
+using Upwork.Application.Validators;
+using Upwork.Domain.Entities;
 
-namespace Upward.Application.Services
+namespace Upwork.Application.Services
 {
     public class CandidateProfileService : ICandidateProfileService
     {

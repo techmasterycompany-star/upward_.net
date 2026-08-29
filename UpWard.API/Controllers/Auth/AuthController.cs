@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Upward.Application.DTOs.Auth;
-using Upward.Application.Interfaces.IService;
+using Upwork.Application.DTOs.Auth;
+using Upwork.Application.Interfaces.IService;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace Upward.API.Controllers
+namespace Upwork.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

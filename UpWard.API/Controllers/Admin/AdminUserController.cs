@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Upward.Application.DTOs.Admin;
-using Upward.Application.Interfaces.IService;
-using Upward.Domain.Enums;
+using Upwork.Application.DTOs.Admin;
+using Upwork.Application.Interfaces.IService;
+using Upwork.Domain.Enums;
 
-namespace Upward.API.Controllers.Admin
+namespace Upwork.API.Controllers.Admin
 {
     [Route("api/admin/users")]
     [ApiController]
