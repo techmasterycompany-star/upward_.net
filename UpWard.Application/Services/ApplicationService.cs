@@ -24,8 +24,17 @@ namespace Upward.Application.Services
             _storageService = storageService;
         }
 
-        public async Task<ApplicationDto> ApplyAsync(long candidateId, long jobId, ApplyJobRequestDto request)
+        public async Task<ApplicationDto> ApplyAsync(long userId, long jobId, ApplyJobRequestDto request)
         {
+            var profile = await _candidateProfileRepository.GetByUserIdAsync(userId);
+
+            if (profile is null)
+            {
+                throw new KeyNotFoundException("user not found.");
+            }
+
+            long candidateId = profile.Id;
+
             if (!request.ConfirmContactInformation)
             {
                 throw new ArgumentException("You must confirm your contact information.");
@@ -82,15 +91,16 @@ namespace Upward.Application.Services
 
             return application.ToDto();
         }
-        public async Task<ApplicationDto> ApplyUsingProfileAsync(long candidateId, long jobId, ApplyUsingProfileDto request)
+        public async Task<ApplicationDto> ApplyUsingProfileAsync(long userId, long jobId, ApplyUsingProfileDto request)
         {
-            var profile = await _candidateProfileRepository.GetByUserIdAsync(candidateId);
+            var profile = await _candidateProfileRepository.GetByUserIdAsync(userId);
 
-            if (profile == null)
+            if (profile is null)
             {
-                throw new KeyNotFoundException("Profile not found.");
-
+                throw new KeyNotFoundException("user not found.");
             }
+
+            long candidateId = profile.Id;
 
             var job = await _jobRepository.GetApprovedJobByIdAsync(jobId);
 
@@ -137,8 +147,17 @@ namespace Upward.Application.Services
             return application.ToDto();
         }
 
-        public async Task<List<CandidateApplicationDto>> GetMyApplicationsAsync(long candidateId)
+        public async Task<List<CandidateApplicationDto>> GetMyApplicationsAsync(long userId)
         {
+            var profile = await _candidateProfileRepository.GetByUserIdAsync(userId);
+
+            if (profile is null)
+            {
+                throw new KeyNotFoundException("user not found.");
+            }
+
+            long candidateId = profile.Id;
+
             var applications = await _applicationRepository.GetByCandidateIdAsync(candidateId);
 
             return applications
@@ -146,8 +165,16 @@ namespace Upward.Application.Services
                 .ToList();
         }
 
-        public async Task CancelAsync(long candidateId, long applicationId)
+        public async Task CancelAsync(long userId, long applicationId)
         {
+            var profile = await _candidateProfileRepository.GetByUserIdAsync(userId);
+
+            if (profile is null)
+            {
+                throw new KeyNotFoundException("user not found.");
+            }
+
+            long candidateId = profile.Id;
             var application = await _applicationRepository
                 .GetByIdAsync(applicationId, candidateId);
 

@@ -9,11 +9,11 @@ namespace Upward.Application.Interfaces.IService
 {
     public interface IApplicationService
     {
-        Task<ApplicationDto> ApplyAsync(long candidateId, long jobId, ApplyJobRequestDto request);
-        Task<ApplicationDto> ApplyUsingProfileAsync(long candidateId, long jobId, ApplyUsingProfileDto request);
+        Task<ApplicationDto> ApplyAsync(long userId, long jobId, ApplyJobRequestDto request);
+        Task<ApplicationDto> ApplyUsingProfileAsync(long userId, long jobId, ApplyUsingProfileDto request);
 
-        Task<List<CandidateApplicationDto>> GetMyApplicationsAsync(long candidateId);
+        Task<List<CandidateApplicationDto>> GetMyApplicationsAsync(long userId);
 
-        Task CancelAsync(long candidateId, long applicationId);
+        Task CancelAsync(long userId, long applicationId);
     }
 }

@@ -14,6 +14,8 @@ Env.Load();
 
 DotNetEnv.Env.Load();
 
+DotNetEnv.Env.Load();
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -111,9 +113,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseWhen(
+    ctx => !ctx.Request.Path.StartsWithSegments("/api/payments/stripe/webhook"),
+    appBuilder => appBuilder.UseHttpsRedirection());
 
-app.UseAuthentication(); 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

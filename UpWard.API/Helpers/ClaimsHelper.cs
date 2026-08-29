@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 
 namespace Upward.API.Helpers
 {
@@ -9,7 +9,7 @@ namespace Upward.API.Helpers
             var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (!long.TryParse(userId, out var id))
-                throw new UnauthorizedAccessException("Invalid user identity.");
+                throw new UnauthorizedAccessException("User identity could not be determined from the token.");
 
             return id;
         }
