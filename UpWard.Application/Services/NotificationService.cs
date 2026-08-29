@@ -17,46 +17,33 @@ namespace Upward.Application.Services
 
         public async Task<IEnumerable<NotificationDto>> GetAllAsync(long userId)
         {
-            try
+            var items = await _repo.GetByUserIdAsync(userId);
+                
+            if(items == null)
             {
-                var items = await _repo.GetByUserIdAsync(userId);
-                return items.Select(Map);
+                return Enumerable.Empty<NotificationDto>();
             }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to retrieve notifications for user {userId}.", ex);
-            }
+
+            return items.Select(Map);
         }
 
         public async Task<IEnumerable<NotificationDto>> GetUnreadAsync(long userId)
         {
-            try
+            var items = await _repo.GetUnreadByUserIdAsync(userId);
+            if(items == null)
             {
-                var items = await _repo.GetUnreadByUserIdAsync(userId);
-                return items.Select(Map);
+                return Enumerable.Empty<NotificationDto>();
             }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to retrieve unread notifications for user {userId}.", ex);
-            }
+            return items.Select(Map);
         }
 
         public async Task<int> GetUnreadCountAsync(long userId)
         {
-            try
-            {
-                return await _repo.GetUnreadCountAsync(userId);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to get unread notification count for user {userId}.", ex);
-            }
+               return await _repo.GetUnreadCountAsync(userId);
         }
 
         public async Task<bool> MarkAsReadAsync(long userId, long notificationId)
         {
-            try
-            {
                 var notification = await _repo.GetByIdAsync(notificationId);
 
                 if (notification is null || notification.UserId != userId)
@@ -68,30 +55,16 @@ namespace Upward.Application.Services
                 await _repo.MarkAsReadAsync(notificationId);
                 await _repo.SaveChangesAsync();
                 return true;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to mark notification {notificationId} as read.", ex);
-            }
         }
 
         public async Task MarkAllAsReadAsync(long userId)
         {
-            try
-            {
                 await _repo.MarkAllAsReadAsync(userId);
                 await _repo.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to mark all notifications as read for user {userId}.", ex);
-            }
         }
 
         public async Task SendAsync(long recipientId, NotificationType type, string title, string content, string? data = null)
         {
-            try
-            {
                 var notification = new Notification
                 {
                     UserId = recipientId,
@@ -106,11 +79,6 @@ namespace Upward.Application.Services
 
                 await _repo.AddAsync(notification);
                 await _repo.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to send notification of type '{type}' to user {recipientId}.", ex);
-            }
         }
 
         // ── Candidate Notifications
