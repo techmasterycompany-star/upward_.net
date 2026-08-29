@@ -30,6 +30,8 @@ namespace Upward.Infrastructure
                 options.ApiKey = configuration["CLOUDINARY_API_KEY"] ?? string.Empty;
                 options.ApiSecret = configuration["CLOUDINARY_API_SECRET"] ?? string.Empty;
             });
+            
+            services.AddScoped<INotificationRepository, NotificationRepository>();
 
             // Repositories
             services.AddScoped<IPlanRepository, PlanRepository>();
@@ -49,7 +51,6 @@ namespace Upward.Infrastructure
             services.AddScoped<ITechnologyRepository, TechnologyRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IAdminDashboardRepository, AdminDashboardRepository>();
-            services.AddScoped<IEmployerRepository, EmployerRepository>();
             services.AddScoped<IEmployerJobRepository, EmployerJobRepository>();
             services.AddScoped<IEmployerApplicationRepository, EmployerApplicationRepository>();
             services.AddScoped<IEmployerAnalyticsRepository, EmployerAnalyticsRepository>();

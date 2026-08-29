@@ -3,6 +3,7 @@ using Stripe;
 using Stripe.Checkout;
 using Upward.Application.DTOs;
 using Upward.Application.Interfaces;
+using Upward.Application.Interfaces.IRepo;
 using Upward.Domain.Enums;
 
 namespace Upward.Application.Services
@@ -52,7 +53,7 @@ namespace Upward.Application.Services
 
         public async Task<CheckoutResponseDto> CreateCheckoutAsync(long employerId, CreateCheckoutRequest request)
         {
-            var emp = await _employerRepo.GetById(employerId) 
+            var emp = await _employerRepo.GetByIdAsync(employerId) 
                 ?? throw new InvalidOperationException($"Employer with ID {employerId} was not found.");
 
             var plan = await _planRepo.GetByIdAsync(request.PlanId)

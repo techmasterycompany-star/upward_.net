@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Upward.Application.Interfaces;
 using Upward.Application.Interfaces.IRepo;
 using Upward.Domain.Entities;
 using Upward.Infrastructure.Data;

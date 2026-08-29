@@ -42,6 +42,7 @@ namespace Upward.Application
             services.AddScoped<IJobService, JobService>();
             services.AddScoped<IApplicationService, ApplicationService>();
             services.AddScoped<ISubscriptionService, SubscriptionService>();
+            services.AddScoped<INotificationService, NotificationService>();
 
             return services;
         }
