@@ -1,4 +1,4 @@
-﻿using Upward.Application.DTOs.Admin;
+using Upward.Application.DTOs.Admin;
 using Upward.Application.Interfaces.IRepo;
 using Upward.Application.Interfaces.IService;
 using Upward.Domain.Entities;
@@ -9,7 +9,13 @@ namespace Upward.Application.Services
     public class AdminJobService : IAdminJobService
     {
         private readonly IJobRepository repo;
-        public AdminJobService(IJobRepository repo) => this.repo = repo;
+        private readonly INotificationService _notificationService;
+
+        public AdminJobService(IJobRepository repo, INotificationService notificationService)
+        {
+            this.repo = repo;
+            _notificationService = notificationService;
+        }
 
         public async Task<List<AdminJobDto>> GetJobsAsync()
         {
@@ -36,6 +42,8 @@ namespace Upward.Application.Services
                 throw new KeyNotFoundException($"Job with id {id} was not found.");
 
             await repo.ApproveJobAsync(job);
+
+            await _notificationService.NotifyJobApprovedAsync(job.Employer.UserId, job.Title);
         }
 
         public async Task RejectJobAsync(long id, string reason)
@@ -46,6 +54,8 @@ namespace Upward.Application.Services
 
             job.RejectionReason = string.IsNullOrWhiteSpace(reason) ? "No reason provided." : reason.Trim();
             await repo.RejectJobAsync(job);
+
+            await _notificationService.NotifyJobRejectedAsync(job.Employer.UserId, job.Title, reason);
         }
 
         private static AdminJobDto MapToDto(Job job) =>
