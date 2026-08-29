@@ -9,10 +9,12 @@ namespace Upwork.Application.Services
     public class EmployerApplicationService : IEmployerApplicationService
     {
         private readonly IEmployerApplicationRepository _applicationRepository;
+        private readonly INotificationService _notificationService;
 
-        public EmployerApplicationService(IEmployerApplicationRepository applicationRepository)
+        public EmployerApplicationService(IEmployerApplicationRepository applicationRepository, INotificationService notificationService)
         {
             _applicationRepository = applicationRepository;
+            _notificationService = notificationService;
         }
 
         public async Task<List<ApplicationDto>> GetApplicationsByJobAsync(long jobId, long employerId)
@@ -51,6 +53,8 @@ namespace Upwork.Application.Services
             application.ReviewedAt = DateTime.UtcNow;
             _applicationRepository.Update(application);
 
+            await _notificationService.NotifyApplicationAcceptedAsync(application.Candidate.UserId, application.Job.Title);
+
             return MapToDto(application);
         }
 
@@ -69,6 +73,8 @@ namespace Upwork.Application.Services
             application.RejectionReason = request.RejectionReason;
             application.ReviewedAt = DateTime.UtcNow;
             _applicationRepository.Update(application);
+
+            await _notificationService.NotifyApplicationRejectedAsync(application.Candidate.UserId, application.Job.Title, request.RejectionReason);
 
             return MapToDto(application);
         }
