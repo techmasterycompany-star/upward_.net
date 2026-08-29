@@ -1,4 +1,4 @@
-﻿namespace Upward.Domain.Common
+﻿namespace Upwork.Domain.Common
 {
     public abstract class SoftDeletableEntity : BaseEntity
     {

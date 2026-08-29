@@ -1,6 +1,6 @@
-﻿using Upward.Application.DTOs.Auth;
+﻿using Upwork.Application.DTOs.Auth;
 
-namespace Upward.Application.Interfaces.IService
+namespace Upwork.Application.Interfaces.IService
 {
     public interface IAuthService
     {

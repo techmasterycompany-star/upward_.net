@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Upward.Domain.Entities;
+using Upwork.Domain.Entities;
 
-namespace Upward.Infrastructure.Data.Configurations;
+namespace Upwork.Infrastructure.Data.Configurations;
 
 public class JobConfiguration : IEntityTypeConfiguration<Job>
 {

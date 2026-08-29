@@ -1,6 +1,6 @@
-﻿using Upward.Application.DTOs.Common;
+﻿using Upwork.Application.DTOs.Common;
 
-namespace Upward.Application.Interfaces.IService
+namespace Upwork.Application.Interfaces.IService
 {
     public interface ICommentService
     {

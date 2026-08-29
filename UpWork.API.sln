@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36717.8
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Upward.API", "UpWard.API\Upward.API.csproj", "{C4C8D1F4-89F1-462A-B19F-709D2F2C1068}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Upwork.API", "UpWard.API\Upwork.API.csproj", "{C4C8D1F4-89F1-462A-B19F-709D2F2C1068}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Public", "Public", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
 	ProjectSection(SolutionItems) = preProject
@@ -11,11 +11,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Public", "Public", "{8EC462
 		Readme.md = Readme.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Upward.Application", "UpWard.Application\Upward.Application.csproj", "{3CE8FFCB-20FE-4018-AD27-46AE118115FD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Upwork.Application", "UpWard.Application\Upwork.Application.csproj", "{3CE8FFCB-20FE-4018-AD27-46AE118115FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Upward.Domain", "Upward.Domain\Upward.Domain.csproj", "{A72DF4AE-B0BA-4CD1-AFDD-284C818258A4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Upwork.Domain", "Upward.Domain\Upwork.Domain.csproj", "{A72DF4AE-B0BA-4CD1-AFDD-284C818258A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Upward.Infrastructure", "Upward.Infrastructure\Upward.Infrastructure.csproj", "{0CB72534-0E0A-4B43-B4E4-173CAB69019A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Upwork.Infrastructure", "Upward.Infrastructure\Upwork.Infrastructure.csproj", "{0CB72534-0E0A-4B43-B4E4-173CAB69019A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -17,8 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\UpWard.Application\Upward.Application.csproj" />
-    <ProjectReference Include="..\Upward.Infrastructure\Upward.Infrastructure.csproj" />
+    <ProjectReference Include="..\UpWard.Application\Upwork.Application.csproj" />
+    <ProjectReference Include="..\UpWard.Application\Upwork.Application.csproj" />
+    <ProjectReference Include="..\Upward.Domain\Upwork.Domain.csproj" />
+    <ProjectReference Include="..\Upward.Infrastructure\Upwork.Infrastructure.csproj" />
+    <ProjectReference Include="..\Upward.Infrastructure\Upwork.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

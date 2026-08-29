@@ -1,6 +1,6 @@
-﻿using Upward.Domain.Enums;
+﻿using Upwork.Domain.Enums;
 
-namespace Upward.Application.DTOs.Admin
+namespace Upwork.Application.DTOs.Admin
 {
     public class AdminJobDto
     {

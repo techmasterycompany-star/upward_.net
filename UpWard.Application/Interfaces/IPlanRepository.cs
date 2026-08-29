@@ -1,6 +1,6 @@
-using Upward.Domain.Entities;
+using Upwork.Domain.Entities;
 
-namespace Upward.Application.Interfaces
+namespace Upwork.Application.Interfaces
 {
     public interface IPlanRepository
     {

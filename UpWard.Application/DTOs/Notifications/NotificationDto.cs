@@ -1,6 +1,6 @@
-using Upward.Domain.Enums;
+using Upwork.Domain.Enums;
 
-namespace Upward.Application.DTOs.Notifications
+namespace Upwork.Application.DTOs.Notifications
 {
     public class NotificationDto
     {

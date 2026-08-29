@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Upward.Infrastructure.Migrations
+namespace Upwork.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class InitializeApplicationStatus : Migration

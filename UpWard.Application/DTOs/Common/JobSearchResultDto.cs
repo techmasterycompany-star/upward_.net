@@ -1,6 +1,6 @@
-﻿using Upward.Domain.Enums;
+﻿using Upwork.Domain.Enums;
 
-namespace Upward.Application.DTOs.Common
+namespace Upwork.Application.DTOs.Common
 {
     public class JobSearchResultDto
     {

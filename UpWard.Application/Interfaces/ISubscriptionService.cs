@@ -1,6 +1,6 @@
-using Upward.Application.DTOs;
+using Upwork.Application.DTOs;
 
-namespace Upward.Application.Interfaces
+namespace Upwork.Application.Interfaces
 {
     public interface ISubscriptionService
     {

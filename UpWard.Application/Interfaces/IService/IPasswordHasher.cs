@@ -1,4 +1,4 @@
-﻿namespace Upward.Application.Interfaces.IService
+﻿namespace Upwork.Application.Interfaces.IService
 {
     public interface IPasswordHasher
     {

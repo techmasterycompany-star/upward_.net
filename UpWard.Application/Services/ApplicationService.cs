@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Upward.Application.DTOs.Candidate;
-using Upward.Application.Interfaces.IRepo;
-using Upward.Application.Interfaces.IService;
-using Upward.Application.Mappings;
-using Upward.Application.Validators;
-using Upward.Domain.Entities;
-using Upward.Domain.Enums;
+using Upwork.Application.DTOs.Candidate;
+using Upwork.Application.Interfaces.IRepo;
+using Upwork.Application.Interfaces.IService;
+using Upwork.Application.Mappings;
+using Upwork.Application.Validators;
+using Upwork.Domain.Entities;
+using Upwork.Domain.Enums;
 
-namespace Upward.Application.Services
+
+namespace Upwork.Application.Services
 {
     public class ApplicationService : IApplicationService
     {
@@ -15,13 +16,15 @@ namespace Upward.Application.Services
         private readonly ICandidateProfileRepository _candidateProfileRepository;
         private readonly IJobRepository _jobRepository;
         private readonly IStorageService _storageService;
+        private readonly INotificationService _notificationService;
 
-        public ApplicationService(IApplicationRepository applicationRepository, ICandidateProfileRepository candidateProfileRepository,IJobRepository jobRepository, IStorageService storageService)
+        public ApplicationService(IApplicationRepository applicationRepository, ICandidateProfileRepository candidateProfileRepository,IJobRepository jobRepository, IStorageService storageService, INotificationService notificationService)
         {
             _applicationRepository = applicationRepository;
             _candidateProfileRepository = candidateProfileRepository;
             _jobRepository = jobRepository;
             _storageService = storageService;
+            _notificationService = notificationService;
         }
 
         public async Task<ApplicationDto> ApplyAsync(long userId, long jobId, ApplyJobRequestDto request)
@@ -89,6 +92,9 @@ namespace Upward.Application.Services
 
             application.Job = job;
 
+            await _notificationService.NotifyApplicationSubmittedAsync(userId, job.Title);
+            await _notificationService.NotifyNewApplicationReceivedAsync(job.Employer.UserId, job.Title, profile.User.Name);
+
             return application.ToDto();
         }
         public async Task<ApplicationDto> ApplyUsingProfileAsync(long userId, long jobId, ApplyUsingProfileDto request)
@@ -143,6 +149,9 @@ namespace Upward.Application.Services
             await _applicationRepository.SaveChangesAsync();
 
             application.Job = job;
+
+            await _notificationService.NotifyApplicationSubmittedAsync(userId, job.Title);
+            await _notificationService.NotifyNewApplicationReceivedAsync(job.Employer.UserId, job.Title, profile.User.Name);
 
             return application.ToDto();
         }

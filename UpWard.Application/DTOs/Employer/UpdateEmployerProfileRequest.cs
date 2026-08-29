@@ -1,4 +1,4 @@
-namespace Upward.Application.DTOs.Employer
+namespace Upwork.Application.DTOs.Employer
 {
     public class UpdateEmployerProfileRequest
     {

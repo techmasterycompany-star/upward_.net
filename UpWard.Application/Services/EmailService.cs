@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Net.Mail;
-using Upward.Application.Interfaces.IService;
+using Upwork.Application.Interfaces.IService;
 
-namespace Upward.Application.Services
+namespace Upwork.Application.Services
 {
     public class EmailService : IEmailService
     {

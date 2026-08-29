@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Upward.Infrastructure.Migrations
+namespace Upwork.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class projectsetup : Migration

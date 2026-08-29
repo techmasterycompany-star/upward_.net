@@ -1,7 +1,7 @@
-using Upward.Application.DTOs.Notifications;
-using Upward.Domain.Enums;
+using Upwork.Application.DTOs.Notifications;
+using Upwork.Domain.Enums;
 
-namespace Upward.Application.Interfaces.IService
+namespace Upwork.Application.Interfaces.IService
 {
     public interface INotificationService
     {

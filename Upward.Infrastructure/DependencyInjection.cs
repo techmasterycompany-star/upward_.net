@@ -1,21 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Upward.Application.Interfaces.IRepo;
-using Upward.Application.Interfaces.IService;
-using Upward.Application.Services;
-using Upward.Application.Interfaces;
-using Upward.Infrastructure.Data;
-using Upward.Infrastructure.FileStorage;
-using Upward.Infrastructure.Repositories;
-using Upward.Infrastructure.Stripe;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Upwork.Application.Interfaces.IRepo;
+using Upwork.Application.Interfaces;
+using Upwork.Infrastructure.Repositories;
+using Upwork.Infrastructure.Stripe;
+using Upwork.Application.Interfaces.IService;
+using Upwork.Infrastructure.Data;
+using Upwork.Infrastructure.FileStorage;
 
-namespace Upward.Infrastructure
+namespace Upwork.Infrastructure
 {
     public static class DependencyInjection
     {

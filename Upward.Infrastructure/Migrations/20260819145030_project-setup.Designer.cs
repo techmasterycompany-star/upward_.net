@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Upward.Infrastructure.Data;
+using Upwork.Infrastructure.Data;
 
 #nullable disable
 
-namespace Upward.Infrastructure.Migrations
+namespace Upwork.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDBContext))]
     [Migration("20260819145030_project-setup")]

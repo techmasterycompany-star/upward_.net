@@ -3,10 +3,10 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Upward.Application;
-using Upward.Application.Interfaces.IRepo;
-using Upward.Infrastructure;
-using Upward.Infrastructure.Data;
+using Upwork.Application;
+using Upwork.Application.Interfaces.IRepo;
+using Upwork.Infrastructure;
+using Upwork.Infrastructure.Data;
 using DotNetEnv;
 using System.Text.Json.Serialization;
 

@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Upward.API.Helpers;
-using Upward.Application.DTOs.Common;
-using Upward.Application.Interfaces.IService;
+using Upwork.API.Helpers;
+using Upwork.Application.DTOs.Common;
+using Upwork.Application.Interfaces.IService;
 
-namespace Upward.API.Controllers
+namespace Upwork.API.Controllers
 {
     [Route("api/job/{jobId:long}/comments")]
     [ApiController]

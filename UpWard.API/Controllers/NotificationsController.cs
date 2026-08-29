@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Upward.Application.Interfaces.IService;
-using Upward.API.Helpers;
+using Upwork.Application.Interfaces.IService;
+using Upwork.API.Helpers;
 
-namespace Upward.API.Controllers
+namespace Upwork.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

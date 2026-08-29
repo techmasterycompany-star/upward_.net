@@ -1,6 +1,6 @@
-﻿using Upward.Domain.Common;
+﻿using Upwork.Domain.Common;
 
-namespace Upward.Domain.Entities
+namespace Upwork.Domain.Entities
 {
     // Stores the JWT ID (jti) of tokens invalidated via logout, until they'd have expired anyway
 

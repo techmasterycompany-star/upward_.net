@@ -1,18 +1,20 @@
-using Upward.Application.DTOs.Employer;
-using Upward.Application.Interfaces.IRepo;
-using Upward.Application.Interfaces.IService;
-using Upward.Domain.Entities;
-using Upward.Domain.Enums;
+using Upwork.Application.DTOs.Employer;
+using Upwork.Application.Interfaces.IRepo;
+using Upwork.Application.Interfaces.IService;
+using Upwork.Domain.Entities;
+using Upwork.Domain.Enums;
 
-namespace Upward.Application.Services
+namespace Upwork.Application.Services
 {
     public class EmployerApplicationService : IEmployerApplicationService
     {
         private readonly IEmployerApplicationRepository _applicationRepository;
+        private readonly INotificationService _notificationService;
 
-        public EmployerApplicationService(IEmployerApplicationRepository applicationRepository)
+        public EmployerApplicationService(IEmployerApplicationRepository applicationRepository, INotificationService notificationService)
         {
             _applicationRepository = applicationRepository;
+            _notificationService = notificationService;
         }
 
         public async Task<List<ApplicationDto>> GetApplicationsByJobAsync(long jobId, long employerId)
@@ -51,6 +53,8 @@ namespace Upward.Application.Services
             application.ReviewedAt = DateTime.UtcNow;
             _applicationRepository.Update(application);
 
+            await _notificationService.NotifyApplicationAcceptedAsync(application.Candidate.UserId, application.Job.Title);
+
             return MapToDto(application);
         }
 
@@ -69,6 +73,8 @@ namespace Upward.Application.Services
             application.RejectionReason = request.RejectionReason;
             application.ReviewedAt = DateTime.UtcNow;
             _applicationRepository.Update(application);
+
+            await _notificationService.NotifyApplicationRejectedAsync(application.Candidate.UserId, application.Job.Title, request.RejectionReason);
 
             return MapToDto(application);
         }

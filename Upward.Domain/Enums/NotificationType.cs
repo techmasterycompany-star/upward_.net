@@ -1,4 +1,5 @@
-namespace Upward.Domain.Enums
+
+﻿namespace Upwork.Domain.Enums
 {
     public enum NotificationType
     {

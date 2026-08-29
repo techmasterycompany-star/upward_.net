@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
 
-namespace Upward.Infrastructure.Data
+namespace Upwork.Infrastructure.Data
 {
     public class AppDBContextFactory : IDesignTimeDbContextFactory<AppDBContext>
     {

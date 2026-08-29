@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Upward.Application.DTOs.Candidate
+namespace Upwork.Application.DTOs.Candidate
 {
     public class UpdateCandidateProfileDto
     {

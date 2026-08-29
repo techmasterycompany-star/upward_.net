@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Upward.Domain.Enums
+namespace Upwork.Domain.Enums
 {
     public enum UserRole
     {

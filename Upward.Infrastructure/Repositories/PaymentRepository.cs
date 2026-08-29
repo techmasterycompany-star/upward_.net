@@ -1,8 +1,8 @@
-using Upward.Application.Interfaces;
-using Upward.Domain.Entities;
-using Upward.Infrastructure.Data;
+using Upwork.Application.Interfaces;
+using Upwork.Domain.Entities;
+using Upwork.Infrastructure.Data;
 
-namespace Upward.Infrastructure.Repositories
+namespace Upwork.Infrastructure.Repositories
 {
     public class PaymentRepository : IPaymentRepository
     {

@@ -1,6 +1,6 @@
-using Upward.Domain.Enums;
+using Upwork.Domain.Enums;
 
-namespace Upward.Application.DTOs
+namespace Upwork.Application.DTOs
 {
     public class StripeCheckoutRequest
     {

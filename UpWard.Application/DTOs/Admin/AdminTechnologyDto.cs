@@ -1,4 +1,4 @@
-﻿namespace Upward.Application.DTOs.Admin
+﻿namespace Upwork.Application.DTOs.Admin
 {
     public class AdminTechnologyDto
     {

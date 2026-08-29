@@ -1,8 +1,8 @@
-using Upward.Application.DTOs.Employer;
-using Upward.Application.Interfaces.IRepo;
-using Upward.Application.Interfaces.IService;
+using Upwork.Application.DTOs.Employer;
+using Upwork.Application.Interfaces.IRepo;
+using Upwork.Application.Interfaces.IService;
 
-namespace Upward.Application.Services
+namespace Upwork.Application.Services
 {
     public class EmployerAnalyticsService : IEmployerAnalyticsService
     {

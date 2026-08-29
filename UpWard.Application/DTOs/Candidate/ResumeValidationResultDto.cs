@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Upward.Application.DTOs.Candidate
+namespace Upwork.Application.DTOs.Candidate
 {
     public class ResumeValidationResultDto
     {

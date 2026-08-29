@@ -3,10 +3,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Upward.Application.Interfaces.IService;
-using Upward.Domain.Entities;
+using Upwork.Application.Interfaces.IService;
+using Upwork.Domain.Entities;
 
-namespace Upward.Application.Services
+namespace Upwork.Application.Services
 {
     public class JwtTokenService : ITokenService
     {
