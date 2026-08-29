@@ -1,4 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Upward.Application.Interfaces;
 using Upward.Application.Interfaces.IRepo;
 using Upward.Domain.Entities;
 using Upward.Infrastructure.Data;
@@ -16,6 +22,9 @@ namespace Upward.Infrastructure.Repositories
             .Include(e => e.Jobs)
             .Include(e => e.Subscriptions)
             .FirstOrDefaultAsync(e => e.Id == id);
+
+        public async Task<EmployerProfile?> GetById(long id) =>
+            await GetByIdAsync(id);
 
         public async Task<EmployerProfile?> GetByUserIdAsync(long userId) =>
             await context.EmployerProfiles

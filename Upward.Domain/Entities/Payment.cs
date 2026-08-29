@@ -1,4 +1,4 @@
-﻿using Upward.Domain.Common;
+using Upward.Domain.Common;
 using Upward.Domain.Enums;
 
 namespace Upward.Domain.Entities
@@ -13,7 +13,7 @@ namespace Upward.Domain.Entities
 
         public PaymentGateway Gateway { get; set; }
 
-        public string GatewayTransactionId { get; set; } = null!;
+        public string? GatewayTransactionId { get; set; }
 
         public PaymentStatus Status { get; set; }
 

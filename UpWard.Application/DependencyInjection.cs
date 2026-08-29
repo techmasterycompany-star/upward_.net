@@ -1,8 +1,14 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Upward.Application.Interfaces.IService;
 using Upward.Application.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Upward.Application.Interfaces;
 
 namespace Upward.Application
 {
@@ -35,7 +41,7 @@ namespace Upward.Application
             services.AddScoped<ISkillsService, SkillsService>();
             services.AddScoped<IJobService, JobService>();
             services.AddScoped<IApplicationService, ApplicationService>();
-
+            services.AddScoped<ISubscriptionService, SubscriptionService>();
 
             return services;
         }
