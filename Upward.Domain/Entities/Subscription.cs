@@ -1,4 +1,4 @@
-using Upward.Domain.Common;
+﻿using Upward.Domain.Common;
 using Upward.Domain.Enums;
 
 namespace Upward.Domain.Entities
@@ -12,8 +12,6 @@ namespace Upward.Domain.Entities
         public BillingCycle BillingCycle { get; set; }
 
         public SubscriptionStatus Status { get; set; }
-
-        public string? StripeSessionId { get; set; }
 
         public DateTime CurrentPeriodStart { get; set; }
 

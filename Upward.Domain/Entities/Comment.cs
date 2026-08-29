@@ -10,7 +10,7 @@ namespace Upward.Domain.Entities
 
         public string Content { get; set; } = null!;
 
-        public bool IsApproved { get; set; } = true;
+        public bool IsApproved { get; set; }
 
         public Job Job { get; set; } = null!;
 
