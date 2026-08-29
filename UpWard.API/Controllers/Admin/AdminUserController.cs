@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Upward.Application.DTOs.Admin;
 using Upward.Application.Interfaces.IService;
-using Upward.Domain.Enums;
 
 namespace Upward.API.Controllers.Admin
 {

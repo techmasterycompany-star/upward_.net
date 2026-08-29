@@ -12,8 +12,8 @@ namespace Upward.Infrastructure.Repositories
 
 
 
-        public Task<int> CountApplicationsAsync() =>
-             context.Applications.CountAsync(a => !a.IsDeleted);
+        public async Task<int> CountApplicationsAsync() =>
+             await context.Applications.CountAsync(a => !a.IsDeleted);
 
 
         public async Task<int> CountCommentsAsync() =>
@@ -24,19 +24,17 @@ namespace Upward.Infrastructure.Repositories
             await context.Comments.CountAsync(a => !a.IsDeleted && !a.IsApproved);
 
 
-        public async Task<int> CountUsersAsync() =>
-            await context.Users.CountAsync(u =>  !u.IsDeleted);
-       
-
-        public async Task<int> CountUsersByRoleAsync(UserRole role) =>
-            await context.Users.CountAsync(u => !u.IsDeleted &&  u.Role == role);
+        public async Task<Dictionary<UserRole , int>> CountUsersByRoleAsync() =>
+            await context.Users
+                .Where(u => !u.IsDeleted)
+                .GroupBy(u => u.Role)
+                .ToDictionaryAsync(u => u.Key, u => u.Count());
 
         public async Task<Dictionary<JobStatus, int>> GetJobCountsByStatusAsync() =>
             await context.Jobs
                  .Where(j => !j.IsDeleted)
                  .GroupBy(j => j.Status)
-                 .Select(g => new { g.Key, Count = g.Count() })
-                 .ToDictionaryAsync(x => x.Key, x => x.Count);
+                 .ToDictionaryAsync(x => x.Key, x => x.Count());
         
     }
 }

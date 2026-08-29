@@ -33,7 +33,7 @@ namespace Upward.API.Controllers.Admin
                 return Conflict($"A technology with the name '{request.Name.Trim()}' already exists.");
 
             var technology = await service.CreateTechnologyAsync(request);
-            return CreatedAtAction(nameof(GetAll), new { id = technology.Id }, technology);
+            return CreatedAtAction(nameof(GetAll), new { id = technology?.Id }, technology);
         }
 
         [HttpPut("{id:long}")]

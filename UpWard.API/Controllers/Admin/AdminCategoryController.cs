@@ -36,7 +36,7 @@ namespace Upward.API.Controllers.Admin
                 return Conflict($"A category with the name '{request.Name.Trim()}' already exists.");
 
             var category = await service.CreateAsync(request);
-            return CreatedAtAction(nameof(GetById), new { id = category.Id }, category);
+            return CreatedAtAction(nameof(GetById), new { id = category?.Id }, category);
         }
 
         [HttpPut("{id:long}")]

@@ -7,7 +7,7 @@ namespace Upward.Application.Interfaces.IRepo
     {
         Task<List<User>> GetAllUsersAsync();
         Task<User?> GetByIdAsync(long id);
-        Task<List<User>> SearchUsersAsync(string? keyword);
+        Task<List<User>> SearchUsersAsync(string keyword);
         Task<List<User>> FilterUsersAsync(bool? isSuspended , UserRole? role);
         Task SuspendUserAsync(User user);
         Task ActivateUserAsync(User user);

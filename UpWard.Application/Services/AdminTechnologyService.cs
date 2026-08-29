@@ -11,12 +11,10 @@ namespace Upward.Application.Services
         public AdminTechnologyService(ITechnologyRepository repo) => this.repo = repo;
 
 
-        public async Task<AdminTechnologyDto> CreateTechnologyAsync(CreateTechnologyRequest request)
+        public async Task<AdminTechnologyDto?> CreateTechnologyAsync(CreateTechnologyRequest request)
         {
-            if (await NameExistsAsync(request.Name))
-                return null;
-
             var tech = new Technology { Name = request.Name.Trim() };
+
             await repo.AddAsync(tech);
             return new AdminTechnologyDto
             {
@@ -63,8 +61,11 @@ namespace Upward.Application.Services
         {
             var tech = await repo.GetByIdAsync(id);
             if (tech is null) return null;
+
             tech.Name = request.Name.Trim();
+
             await repo.UpdateAsync(tech);
+
             return new AdminTechnologyDto
             {
                 Id = tech.Id,

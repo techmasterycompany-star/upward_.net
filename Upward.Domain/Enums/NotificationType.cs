@@ -13,6 +13,7 @@
         PaymentRefunded = 7,
 
         SubscriptionRenewed = 8,
-        SubscriptionCancelled = 9
+        SubscriptionCancelled = 9,
+        AdminBroadcast = 10
     }
 }

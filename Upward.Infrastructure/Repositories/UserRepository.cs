@@ -46,16 +46,14 @@ namespace Upward.Infrastructure.Repositories
         public async Task<User?> GetByIdAsync(long id) => 
             await context.Users.FirstOrDefaultAsync(u => u.Id == id && !u.IsDeleted);
 
-        public async Task<List<User>> SearchUsersAsync(string? keyword)
+        public async Task<List<User>> SearchUsersAsync(string keyword)
         {
-            if (string.IsNullOrWhiteSpace(keyword))
-                return await GetAllUsersAsync();
-
-            var cleanKeyword = keyword.Trim();
+            var cleanKeyword = keyword.Trim().ToLower();
             return await context.Users
-              .Where(u => !u.IsDeleted && u.Name.Contains(cleanKeyword))
-              .OrderByDescending(u => u.CreatedAt)
-              .ToListAsync();
+                .AsNoTracking()
+                .Where(u => !u.IsDeleted && u.Name.ToLower().Contains(cleanKeyword))
+                .OrderByDescending(u => u.CreatedAt)
+                .ToListAsync();
         }
 
         public async Task SuspendUserAsync(User user)
