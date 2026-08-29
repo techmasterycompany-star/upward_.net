@@ -12,17 +12,23 @@ namespace Upwork.Application.Services
 
         public async Task<AdminDashboardDto> GetDashboardAsync()
         {
+            var userCounts = await repo.CountUsersByRoleAsync();
             var jobCounts = await repo.GetJobCountsByStatusAsync();
+
+            userCounts.TryGetValue(UserRole.Candidate, out var candidates);
+            userCounts.TryGetValue(UserRole.Employer, out var employers);
+            userCounts.TryGetValue(UserRole.Admin, out var admins);
 
             jobCounts.TryGetValue(JobStatus.PendingApproval, out var pendingJobs);
             jobCounts.TryGetValue(JobStatus.Approved, out var approvedJobs);
             jobCounts.TryGetValue(JobStatus.Rejected, out var rejectedJobs);
+
             return new AdminDashboardDto
             {
-                TotalUsers = await repo.CountUsersAsync(),
-                Candidates = await repo.CountUsersByRoleAsync(UserRole.Candidate),
-                Employers = await repo.CountUsersByRoleAsync(UserRole.Employer),
-                Admins = await repo.CountUsersByRoleAsync(UserRole.Admin),
+                TotalUsers = userCounts.Values.Sum(),
+                Candidates = candidates,
+                Employers = employers,
+                Admins = admins,
                 TotalJobs = jobCounts.Values.Sum(),
                 PendingJobs = pendingJobs,
                 ApprovedJobs = approvedJobs,

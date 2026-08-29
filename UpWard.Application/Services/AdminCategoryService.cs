@@ -10,7 +10,7 @@ namespace Upwork.Application.Services
         private readonly ICategoryRepository repo;
         public AdminCategoryService(ICategoryRepository repo) => this.repo = repo;
 
-        public async Task<AdminCategoryDto> CreateAsync(CreateCategoryRequest request)
+        public async Task<AdminCategoryDto?> CreateAsync(CreateCategoryRequest request)
         {
             if (await NameExistsAsync(request.Name))
                 return null;

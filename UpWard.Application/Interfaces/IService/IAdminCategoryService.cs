@@ -7,7 +7,7 @@ namespace Upwork.Application.Interfaces.IService
         Task<List<AdminCategoryDto>> GetAllAsync();
         Task<AdminCategoryDto?> GetByIdAsync(long id);
         Task<bool> NameExistsAsync(string name, long? excludeId = null);
-        Task<AdminCategoryDto> CreateAsync(CreateCategoryRequest request);
+        Task<AdminCategoryDto?> CreateAsync(CreateCategoryRequest request);
         Task<AdminCategoryDto?> UpdateAsync(long id, UpdateCategoryRequest request);
         Task<bool> DeleteAsync(long id);
     }
