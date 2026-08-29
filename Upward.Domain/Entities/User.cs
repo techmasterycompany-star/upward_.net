@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using Upward.Domain.Common;
+﻿using Upward.Domain.Common;
 using Upward.Domain.Enums;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Upward.Domain.Entities
 {
@@ -19,6 +12,7 @@ namespace Upward.Domain.Entities
         public string PasswordHash { get; set; } = null!;
 
         public UserRole Role { get; set; }
+        public bool IsSuspended { get; set; }
 
         public DateTime? EmailVerifiedAt { get; set; }
 

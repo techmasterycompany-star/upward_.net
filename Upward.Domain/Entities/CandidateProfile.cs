@@ -14,7 +14,8 @@ namespace Upward.Domain.Entities
 
         public string? PortfolioUrl { get; set; }
 
-        public string? Resume { get; set; }
+        public string? ResumeUrl { get; set; }
+        public string? ResumePublicId { get; set; }
 
         public string? LinkedinProfile { get; set; }
 
@@ -23,7 +24,7 @@ namespace Upward.Domain.Entities
         // Navigation properties
         public User User { get; set; } = null!;
 
-        public ICollection<Application> Applications { get; set; } = new List<Application>();
+        public ICollection<JobApplication> Applications { get; set; } = new List<JobApplication>();
 
         public ICollection<CandidateSkill> CandidateSkills { get; set; } = new List<CandidateSkill>();
 

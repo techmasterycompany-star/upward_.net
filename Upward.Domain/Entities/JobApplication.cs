@@ -3,7 +3,8 @@ using Upward.Domain.Enums;
 
 namespace Upward.Domain.Entities
 {
-    public class Application : SoftDeletableEntity
+    
+    public class JobApplication : SoftDeletableEntity
     {
         public long JobId { get; set; }
 
@@ -19,7 +20,7 @@ namespace Upward.Domain.Entities
 
         public string ContactPhone { get; set; } = null!;
 
-        public ApplicationStatus Status { get; set; }
+        public ApplicationStatus Status { get; set; } = ApplicationStatus.Submitted;
 
         public DateTime? ReviewedAt { get; set; }
 

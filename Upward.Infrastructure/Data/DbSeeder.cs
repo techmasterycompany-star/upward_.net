@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Upward.Domain.Entities;
 using Upward.Domain.Enums;
-using JobApplication = Upward.Domain.Entities.Application;
 
 namespace Upward.Infrastructure.Data
 {
@@ -136,7 +135,7 @@ namespace Upward.Infrastructure.Data
                 Bio = "Backend developer interested in scalable web applications.",
                 Location = "Alexandria, Egypt",
                 PortfolioUrl = "https://portfolio.example.com/omar",
-                Resume = "resumes/omar-resume.pdf",
+                ResumeUrl = "resumes/omar-resume.pdf",
                 LinkedinProfile = "https://linkedin.com/in/omar",
                 IsDiscoverable = true,
                 CreatedAt = DateTime.UtcNow,
@@ -150,7 +149,7 @@ namespace Upward.Infrastructure.Data
                 Bio = "Frontend developer specializing in Angular and TypeScript.",
                 Location = "Cairo, Egypt",
                 PortfolioUrl = "https://portfolio.example.com/mariam",
-                Resume = "resumes/mariam-resume.pdf",
+                ResumeUrl = "resumes/mariam-resume.pdf",
                 LinkedinProfile = "https://linkedin.com/in/mariam",
                 IsDiscoverable = true,
                 CreatedAt = DateTime.UtcNow,
@@ -427,6 +426,7 @@ namespace Upward.Infrastructure.Data
                 PlanId = freePlan.Id,
                 BillingCycle = BillingCycle.Monthly,
                 Status = SubscriptionStatus.Active,
+                StripeSessionId = null,
                 CurrentPeriodStart = DateTime.UtcNow.Date,
                 CurrentPeriodEnd = DateTime.UtcNow.Date.AddMonths(1),
                 CreatedAt = DateTime.UtcNow,
@@ -439,6 +439,7 @@ namespace Upward.Infrastructure.Data
                 PlanId = proPlan.Id,
                 BillingCycle = BillingCycle.Monthly,
                 Status = SubscriptionStatus.Active,
+                StripeSessionId = null,
                 CurrentPeriodStart = DateTime.UtcNow.Date,
                 CurrentPeriodEnd = DateTime.UtcNow.Date.AddMonths(1),
                 CreatedAt = DateTime.UtcNow,

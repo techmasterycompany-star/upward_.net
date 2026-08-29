@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -7,11 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Repositories\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="CloudinaryDotNet" Version="1.29.3" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.2.0" />
+    <PackageReference Include="DotNetEnv" Version="3.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.19" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.19" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.19">
@@ -20,12 +18,13 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.19" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.19" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.19" />
+    <PackageReference Include="Stripe.net" Version="52.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\UpWard.Application\Upward.Application.csproj" />
     <ProjectReference Include="..\Upward.Domain\Upward.Domain.csproj" />
-    <ProjectReference Include="..\Upward.Shared\Upward.Shared.csproj" />
   </ItemGroup>
 
 </Project>
