@@ -13,7 +13,7 @@ public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
         builder.Property(x => x.Amount).IsRequired();
         builder.Property(x => x.Currency).IsRequired();
         builder.Property(x => x.Gateway).IsRequired();
-        builder.Property(x => x.GatewayTransactionId).HasMaxLength(255).IsRequired(false);
+        builder.Property(x => x.GatewayTransactionId).IsRequired();
         builder.Property(x => x.Status).IsRequired();
 
         builder.HasOne(x => x.Subscription)

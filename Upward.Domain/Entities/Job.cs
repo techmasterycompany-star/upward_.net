@@ -44,7 +44,7 @@ namespace Upward.Domain.Entities
 
         public ICollection<JobTechnology> JobTechnologies { get; set; } = new List<JobTechnology>();
 
-        public ICollection<JobApplication> Applications { get; set; } = new List<JobApplication>();
+        public ICollection<Application> Applications { get; set; } = new List<Application>();
 
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
