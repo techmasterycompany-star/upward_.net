@@ -69,6 +69,7 @@ namespace Upwork.Infrastructure.Repositories
             IQueryable<Job> query = _context.Jobs
                 .AsNoTracking()
                 .Include(j => j.Employer)
+                .Include(j => j.Category)
                 .Where(j =>
                     !j.IsDeleted &&
                     (j.Status == JobStatus.Approved ||

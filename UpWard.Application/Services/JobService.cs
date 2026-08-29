@@ -9,10 +9,11 @@ namespace Upwork.Application.Services
     public class JobService : IJobService
     {
         private readonly IJobRepository _jobRepository;
-
-        public JobService(IJobRepository jobRepository)
+        private readonly ICandidateProfileRepository _candidateProfileRepository;
+        public JobService(IJobRepository jobRepository, ICandidateProfileRepository candidateProfileRepository, ICategoryRepository categoryRepository)
         {
             _jobRepository = jobRepository;
+            _candidateProfileRepository = candidateProfileRepository;
         }
         public async Task<PagedResultDto<JobSearchResultDto>> SearchAsync(JobSearchRequestDto request)
         {
@@ -69,8 +70,17 @@ namespace Upwork.Application.Services
             await _jobRepository.SaveChangesAsync();
         }
 
-        public async Task<SavedSearchDto> SaveSearchAsync(long candidateId, SaveJobSearchRequestDto request)
+        public async Task<SavedSearchDto> SaveSearchAsync(long userId, SaveJobSearchRequestDto request)
         {
+            var profile = await _candidateProfileRepository.GetByUserIdAsync(userId);
+
+            if (profile is null)
+            {
+                throw new KeyNotFoundException("user not found.");
+            }
+
+            long candidateId = profile.Id;
+
             if (string.IsNullOrWhiteSpace(request.Name))
                 throw new ArgumentException("Search name is required.");
 
@@ -100,15 +110,33 @@ namespace Upwork.Application.Services
             return savedSearch.ToDto();
         }
 
-        public async Task<List<SavedSearchDto>> GetSavedSearchesAsync(long candidateId)
+        public async Task<List<SavedSearchDto>> GetSavedSearchesAsync(long userId)
         {
+            var profile = await _candidateProfileRepository.GetByUserIdAsync(userId);
+
+            if (profile is null)
+            {
+                throw new KeyNotFoundException("user not found.");
+            }
+
+            long candidateId = profile.Id;
+
             var searches = await _jobRepository.GetSavedSearchesAsync(candidateId);
 
             return searches.Select(s => s.ToDto()).ToList();
         }
 
-        public async Task DeleteSavedSearchAsync(long candidateId, long savedSearchId)
+        public async Task DeleteSavedSearchAsync(long userId, long savedSearchId)
         {
+            var profile = await _candidateProfileRepository.GetByUserIdAsync(userId);
+
+            if (profile is null)
+            {
+                throw new KeyNotFoundException("user not found.");
+            }
+
+            long candidateId = profile.Id;
+
             var savedSearch = await _jobRepository.GetSavedSearchByIdAsync(candidateId, savedSearchId);
 
             if (savedSearch == null)

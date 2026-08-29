@@ -12,8 +12,8 @@ namespace Upwork.Application.Interfaces.IService
         Task<PagedResultDto<JobSearchResultDto>> SearchAsync(JobSearchRequestDto request);
         Task<JobDetailsDto> GetByIdAsync(long jobId);
         Task RecordViewAsync(long jobId, long? userId, string? ipAddress);
-        Task<SavedSearchDto> SaveSearchAsync(long candidateId, SaveJobSearchRequestDto request);
-        Task<List<SavedSearchDto>> GetSavedSearchesAsync(long candidateId);
-        Task DeleteSavedSearchAsync(long candidateId, long savedSearchId);
+        Task<SavedSearchDto> SaveSearchAsync(long userId, SaveJobSearchRequestDto request);
+        Task<List<SavedSearchDto>> GetSavedSearchesAsync(long userId);
+        Task DeleteSavedSearchAsync(long userId, long savedSearchId);
     }
 }

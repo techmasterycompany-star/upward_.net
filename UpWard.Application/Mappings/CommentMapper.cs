@@ -12,6 +12,8 @@ namespace Upwork.Application.Mappings
                 Id = comment.Id,
                 JobId = comment.JobId,
                 UserId = comment.UserId,
+                UserName = comment.User?.Name ?? "",
+                UserEmail = comment.User?.Email ?? "",
                 Content = comment.Content,
                 IsApproved = comment.IsApproved,
                 CreatedAt = comment.CreatedAt,

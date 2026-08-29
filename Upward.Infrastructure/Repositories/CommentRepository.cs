@@ -61,6 +61,7 @@ namespace Upwork.Infrastructure.Repositories
         public async Task<Comment?> GetCommentByIdAsync(long commentId)
         {
             return await _context.Comments
+                .Include(c => c.User)
                 .FirstOrDefaultAsync(x =>
                     x.Id == commentId &&
                     !x.IsDeleted);
@@ -69,6 +70,7 @@ namespace Upwork.Infrastructure.Repositories
         public async Task<List<Comment>> GetByJobIdAsync(long jobId)
         {
             return await _context.Comments
+                .Include(c => c.User)
                 .Where(x =>
                     x.JobId == jobId &&
                     !x.IsDeleted)

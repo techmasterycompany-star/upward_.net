@@ -6,7 +6,7 @@ using Upwork.Application.Interfaces.IService;
 
 namespace Upwork.API.Controllers
 {
-    [Route("api/job/{jobId:long}/comments")]
+    [Route("api/Job")]
     [ApiController]
     [Authorize(Roles = "Candidate,Employer")]
     public class JobCommentController : ControllerBase
@@ -18,7 +18,7 @@ namespace Upwork.API.Controllers
             _commentService = commentService;
         }
 
-        [HttpGet]
+        [HttpGet("{jobId:long}/comments")]
         [AllowAnonymous]
         public async Task<IActionResult> GetComments(long jobId)
         {
@@ -34,7 +34,7 @@ namespace Upwork.API.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("{jobId:long}/comments")]
         public async Task<IActionResult> CreateComment(long jobId, [FromBody] CreateCommentDto request)
         {
             try
@@ -59,7 +59,7 @@ namespace Upwork.API.Controllers
             }
         }
 
-        [HttpPut("{commentId:long}")]
+        [HttpPut("comments/{commentId:long}")]
         public async Task<IActionResult> UpdateComment(long commentId, [FromBody] UpdateCommentDto request)
         {
             try
@@ -84,7 +84,7 @@ namespace Upwork.API.Controllers
             }
         }
 
-        [HttpDelete("{commentId:long}")]
+        [HttpDelete("comments/{commentId:long}")]
         public async Task<IActionResult> DeleteComment(long commentId)
         {
             try

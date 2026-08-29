@@ -34,6 +34,7 @@ namespace Upwork.Application
             services.AddScoped<ICandidateProfileService, CandidateProfileService>();
             services.AddScoped<ISkillsService, SkillsService>();
             services.AddScoped<IJobService, JobService>();
+            services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<IApplicationService, ApplicationService>();
             services.AddScoped<ISubscriptionService, SubscriptionService>();
             services.AddScoped<INotificationService, NotificationService>();
