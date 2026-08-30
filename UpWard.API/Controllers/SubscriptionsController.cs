@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Upward.Application.DTOs;
 using Upward.Application.Interfaces;
@@ -6,6 +7,7 @@ namespace Upward.API.Controllers
 {
     [ApiController]
     [Route("api/subscriptions")]
+    [Authorize]
     public class SubscriptionsController : ControllerBase
     {
         private readonly ISubscriptionService _subscriptionService;
