@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Upward.Application.DTOs;
 using Upward.Application.Interfaces;
+using Upward.API.Helpers;
+using Upward.Application.Exceptions;
 
 namespace Upward.API.Controllers
 {
@@ -18,21 +20,25 @@ namespace Upward.API.Controllers
         }
 
         [HttpPost("checkout")]
-        public async Task<IActionResult> CreateCheckout(
-            [FromQuery] long employerId,
-            [FromBody]  CreateCheckoutRequest request)
+        public async Task<IActionResult> CreateCheckout([FromBody]  CreateCheckoutRequest request)
         {
-            if (employerId <= 0)
-                return BadRequest(new { message = "A valid employerId query parameter is required." });
-
             try
             {
+                var employerId = ClaimsHelper.GetUserId(User);
                 var result = await _subscriptionService.CreateCheckoutAsync(employerId, request);
                 return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
             }
             catch (InvalidOperationException ex)
             {
                 return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An unexpected error occurred." });
             }
         }
     }

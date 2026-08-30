@@ -4,6 +4,7 @@ using Stripe.Checkout;
 using Upward.Application.DTOs;
 using Upward.Application.Interfaces;
 using Upward.Domain.Enums;
+using Upward.Application.Exceptions;
 
 namespace Upward.Application.Services
 {
@@ -53,10 +54,10 @@ namespace Upward.Application.Services
         public async Task<CheckoutResponseDto> CreateCheckoutAsync(long employerId, CreateCheckoutRequest request)
         {
             var emp = await _employerRepo.GetById(employerId) 
-                ?? throw new InvalidOperationException($"Employer with ID {employerId} was not found.");
+                ?? throw new NotFoundException($"Employer with ID {employerId} was not found.");
 
             var plan = await _planRepo.GetByIdAsync(request.PlanId)
-                ?? throw new InvalidOperationException($"Plan with ID {request.PlanId} was not found.");
+                ?? throw new NotFoundException($"Plan with ID {request.PlanId} was not found.");
 
             var amount = request.BillingCycle == BillingCycle.Yearly
                 ? plan.PriceYearly
@@ -64,6 +65,10 @@ namespace Upward.Application.Services
 
             if (amount <= 0)
                 throw new InvalidOperationException("Cannot checkout a free plan. No payment is required.");
+
+            var userSubscription = await _employerRepo.GetSubscriptionByUserId(employerId);
+            if(userSubscription != null && userSubscription.Status == SubscriptionStatus.Active)
+                throw new InvalidOperationException("Employer already has an active subscription.");
 
             var successUrl = _configuration["Stripe:SuccessUrl"];
             var cancelUrl  = _configuration["Stripe:CancelUrl"];
@@ -130,15 +135,16 @@ namespace Upward.Application.Services
             if (stripeEvent.Type == EventTypes.CheckoutSessionCompleted)
             {
                 var session = stripeEvent.Data.Object as Session;
-                if (session == null) return;
+
+
+                if (session == null) throw new InvalidOperationException("Session is null.");
+
+                if(session.PaymentStatus != "paid") throw new InvalidOperationException("Payment status is not paid.");
 
                 var sessionId = session.Id;
 
                 var subscription = await _subscriptionRepo.GetByStripeSessionIdAsync(sessionId);
-                if (subscription == null)
-                {
-                    return;
-                }
+                if (subscription == null) throw new NotFoundException("Subscription not found.");
 
                 var now = DateTime.UtcNow;
 

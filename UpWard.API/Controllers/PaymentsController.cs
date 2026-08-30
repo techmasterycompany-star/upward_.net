@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Upward.Application.Interfaces;
+using Upward.Application.Exceptions;
 
 namespace Upward.API.Controllers
 {
@@ -10,8 +11,7 @@ namespace Upward.API.Controllers
         private readonly ISubscriptionService _subscriptionService;
 
         public PaymentsController(
-            ISubscriptionService subscriptionService,
-            ILogger<PaymentsController> logger)
+            ISubscriptionService subscriptionService)
         {
             _subscriptionService = subscriptionService;
         }
@@ -40,6 +40,14 @@ namespace Upward.API.Controllers
             catch (Stripe.StripeException ex)
             {
                 return BadRequest(new { message = "Invalid webhook signature." });
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
             }
             catch (Exception ex)
             {

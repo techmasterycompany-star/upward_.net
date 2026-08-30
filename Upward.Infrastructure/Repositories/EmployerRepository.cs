@@ -22,5 +22,10 @@ namespace Upward.Infrastructure.Repositories
             var result = await _context.EmployerProfiles.FirstOrDefaultAsync(p => p.Id == id);
             return result;
         }
+        public async Task<Subscription> GetSubscriptionByUserId(long id)
+        {
+            var result = await _context.Subscriptions.FirstOrDefaultAsync(p => p.Id == id);
+            return result;
+        }
     }
 }

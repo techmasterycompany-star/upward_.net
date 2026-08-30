@@ -10,5 +10,6 @@ namespace Upward.Application.Interfaces
     public interface IEmployerRepository
     {
         Task<EmployerProfile> GetById(long id);
+        Task<Subscription> GetSubscriptionByUserId(long id);
     }
 }
