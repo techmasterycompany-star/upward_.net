@@ -18,9 +18,6 @@ namespace Upwork.Infrastructure.Repositories
             .Include(e => e.Subscriptions)
             .FirstOrDefaultAsync(e => e.Id == id);
 
-        public async Task<EmployerProfile?> GetById(long id) =>
-            await GetByIdAsync(id);
-
         public async Task<EmployerProfile?> GetByUserIdAsync(long userId) =>
             await context.EmployerProfiles
             .Include(e => e.User)
@@ -70,5 +67,10 @@ namespace Upwork.Infrastructure.Repositories
 
         public async Task<bool> ExistsByUserIdAsync(long userId) =>
             await context.EmployerProfiles.AnyAsync(e => e.UserId == userId);
+        public async Task<Subscription?> GetSubscriptionByUserId(long id)
+        {
+            var result = await context.Subscriptions.FirstOrDefaultAsync(p => p.EmployerId == id);
+            return result;
+        }
     }
 }

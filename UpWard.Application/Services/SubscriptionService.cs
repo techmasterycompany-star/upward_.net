@@ -4,6 +4,7 @@ using Stripe.Checkout;
 using Upwork.Application.DTOs;
 using Upwork.Application.Interfaces;
 using Upwork.Application.Interfaces.IRepo;
+using Upwork.Application.Exceptions;
 using Upwork.Domain.Enums;
 
 namespace Upwork.Application.Services
@@ -53,11 +54,11 @@ namespace Upwork.Application.Services
 
         public async Task<CheckoutResponseDto> CreateCheckoutAsync(long employerId, CreateCheckoutRequest request)
         {
-            var emp = await _employerRepo.GetByIdAsync(employerId) 
-                ?? throw new InvalidOperationException($"Employer with ID {employerId} was not found.");
+            var emp = await _employerRepo.GetByUserIdAsync(employerId) 
+                ?? throw new NotFoundException($"Employer with ID {employerId} was not found.");
 
             var plan = await _planRepo.GetByIdAsync(request.PlanId)
-                ?? throw new InvalidOperationException($"Plan with ID {request.PlanId} was not found.");
+                ?? throw new NotFoundException($"Plan with ID {request.PlanId} was not found.");
 
             var amount = request.BillingCycle == BillingCycle.Yearly
                 ? plan.PriceYearly
@@ -65,6 +66,10 @@ namespace Upwork.Application.Services
 
             if (amount <= 0)
                 throw new InvalidOperationException("Cannot checkout a free plan. No payment is required.");
+
+            var userSubscription = await _employerRepo.GetSubscriptionByUserId(emp.Id);
+            if(userSubscription != null && userSubscription.Status == SubscriptionStatus.Active)
+                throw new InvalidOperationException("Employer already has an active subscription.");
 
             var successUrl = _configuration["Stripe:SuccessUrl"];
             var cancelUrl  = _configuration["Stripe:CancelUrl"];
@@ -91,7 +96,7 @@ namespace Upwork.Application.Services
 
             var subscription = new Upwork.Domain.Entities.Subscription
             {
-                EmployerId          = employerId,
+                EmployerId          = emp.Id,
                 PlanId              = plan.Id,
                 BillingCycle        = request.BillingCycle,
                 Status              = SubscriptionStatus.Pending,
@@ -131,15 +136,16 @@ namespace Upwork.Application.Services
             if (stripeEvent.Type == EventTypes.CheckoutSessionCompleted)
             {
                 var session = stripeEvent.Data.Object as Session;
-                if (session == null) return;
+
+
+                if (session == null) throw new InvalidOperationException("Session is null.");
+
+                if(session.PaymentStatus != "paid") throw new InvalidOperationException("Payment status is not paid.");
 
                 var sessionId = session.Id;
 
                 var subscription = await _subscriptionRepo.GetByStripeSessionIdAsync(sessionId);
-                if (subscription == null)
-                {
-                    return;
-                }
+                if (subscription == null) throw new NotFoundException("Subscription not found.");
 
                 var now = DateTime.UtcNow;
 

@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Upwork.Application.Interfaces;
+using Upwork.Application.Interfaces;
+using Upwork.Application.Exceptions;
 
 namespace Upwork.API.Controllers
 {
@@ -10,8 +12,7 @@ namespace Upwork.API.Controllers
         private readonly ISubscriptionService _subscriptionService;
 
         public PaymentsController(
-            ISubscriptionService subscriptionService,
-            ILogger<PaymentsController> logger)
+            ISubscriptionService subscriptionService)
         {
             _subscriptionService = subscriptionService;
         }
@@ -40,6 +41,14 @@ namespace Upwork.API.Controllers
             catch (Stripe.StripeException ex)
             {
                 return BadRequest(new { message = "Invalid webhook signature." });
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
             }
             catch (Exception ex)
             {

@@ -12,5 +12,6 @@ namespace Upwork.Application.Interfaces.IRepo
         void Update(EmployerProfile employer);
         void Delete(EmployerProfile employer);
         Task<bool> ExistsByUserIdAsync(long userId);
+        Task<Subscription?> GetSubscriptionByUserId(long id);
     }
 }

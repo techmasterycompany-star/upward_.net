@@ -2,6 +2,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Upwork.Application.DTOs;
 using Upwork.Application.Interfaces;
+using Upwork.Application.DTOs;
+using Upwork.Application.Interfaces;
+using Upwork.API.Helpers;
+using Upwork.Application.Exceptions;
 
 namespace Upwork.API.Controllers
 {
@@ -18,21 +22,25 @@ namespace Upwork.API.Controllers
         }
 
         [HttpPost("checkout")]
-        public async Task<IActionResult> CreateCheckout(
-            [FromQuery] long employerId,
-            [FromBody]  CreateCheckoutRequest request)
+        public async Task<IActionResult> CreateCheckout([FromBody]  CreateCheckoutRequest request)
         {
-            if (employerId <= 0)
-                return BadRequest(new { message = "A valid employerId query parameter is required." });
-
             try
             {
+                var employerId = ClaimsHelper.GetUserId(User);
                 var result = await _subscriptionService.CreateCheckoutAsync(employerId, request);
                 return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
             }
             catch (InvalidOperationException ex)
             {
                 return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An unexpected error occurred." });
             }
         }
     }
