@@ -16,7 +16,7 @@ namespace Upwork.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetMyProfile()
         {
-            var userId = long.Parse(User.FindFirst("UserId")?.Value ?? "0");
+            var userId = long.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "0");
             var profile = await _service.GetByUserIdAsync(userId);
             if (profile == null)
                 return NotFound("Employer profile not found.");
@@ -44,7 +44,7 @@ namespace Upwork.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProfile([FromBody] CreateEmployerProfileRequest request)
         {
-            var userId = long.Parse(User.FindFirst("UserId")?.Value ?? "0");
+            var userId = long.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "0");
             request.UserId = userId;
             try
             {

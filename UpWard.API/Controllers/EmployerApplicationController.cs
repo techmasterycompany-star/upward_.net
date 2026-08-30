@@ -16,7 +16,7 @@ namespace Upwork.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetMyApplications()
         {
-            var userId = long.Parse(User.FindFirst("UserId")?.Value ?? "0");
+            var userId = long.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "0");
             var applications = await _service.GetApplicationsByEmployerAsync(userId);
             return Ok(applications);
         }
@@ -24,7 +24,7 @@ namespace Upwork.API.Controllers
         [HttpGet("job/{jobId:long}")]
         public async Task<IActionResult> GetByJob(long jobId)
         {
-            var userId = long.Parse(User.FindFirst("UserId")?.Value ?? "0");
+            var userId = long.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "0");
             var applications = await _service.GetApplicationsByJobAsync(jobId, userId);
             return Ok(applications);
         }
@@ -32,7 +32,7 @@ namespace Upwork.API.Controllers
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GetById(long id)
         {
-            var userId = long.Parse(User.FindFirst("UserId")?.Value ?? "0");
+            var userId = long.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "0");
             var application = await _service.GetByIdAsync(id, userId);
             if (application == null) return NotFound("Application not found.");
             return Ok(application);
@@ -41,7 +41,7 @@ namespace Upwork.API.Controllers
         [HttpPatch("{id:long}/accept")]
         public async Task<IActionResult> Accept(long id)
         {
-            var userId = long.Parse(User.FindFirst("UserId")?.Value ?? "0");
+            var userId = long.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "0");
             try
             {
                 var result = await _service.AcceptAsync(id, userId);
@@ -56,7 +56,7 @@ namespace Upwork.API.Controllers
         [HttpPatch("{id:long}/reject")]
         public async Task<IActionResult> Reject(long id, [FromBody] ReviewApplicationRequest request)
         {
-            var userId = long.Parse(User.FindFirst("UserId")?.Value ?? "0");
+            var userId = long.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "0");
             try
             {
                 var result = await _service.RejectAsync(id, userId, request);

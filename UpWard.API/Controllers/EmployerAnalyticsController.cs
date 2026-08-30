@@ -16,7 +16,7 @@ namespace Upwork.API.Controllers
         [HttpGet("dashboard")]
         public async Task<IActionResult> GetDashboard()
         {
-            var userId = long.Parse(User.FindFirst("UserId")?.Value ?? "0");
+            var userId = long.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "0");
             var dashboard = await _service.GetDashboardAsync(userId);
             return Ok(dashboard);
         }
@@ -24,7 +24,7 @@ namespace Upwork.API.Controllers
         [HttpGet("jobs")]
         public async Task<IActionResult> GetJobAnalytics()
         {
-            var userId = long.Parse(User.FindFirst("UserId")?.Value ?? "0");
+            var userId = long.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "0");
             var analytics = await _service.GetJobAnalyticsAsync(userId);
             return Ok(analytics);
         }

@@ -16,7 +16,7 @@ namespace Upwork.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetMyJobs()
         {
-            var userId = long.Parse(User.FindFirst("UserId")?.Value ?? "0");
+            var userId = long.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "0");
             var jobs = await _service.GetJobsByEmployerAsync(userId);
             return Ok(jobs);
         }
@@ -24,7 +24,7 @@ namespace Upwork.API.Controllers
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GetById(long id)
         {
-            var userId = long.Parse(User.FindFirst("UserId")?.Value ?? "0");
+            var userId = long.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "0");
             var job = await _service.GetByIdAsync(id, userId);
             if (job == null) return NotFound("Job not found.");
             return Ok(job);
@@ -33,7 +33,7 @@ namespace Upwork.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateJobRequest request)
         {
-            var userId = long.Parse(User.FindFirst("UserId")?.Value ?? "0");
+            var userId = long.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "0");
             try
             {
                 var job = await _service.CreateAsync(userId, request);
@@ -48,7 +48,7 @@ namespace Upwork.API.Controllers
         [HttpPut("{id:long}")]
         public async Task<IActionResult> Update(long id, [FromBody] UpdateJobRequest request)
         {
-            var userId = long.Parse(User.FindFirst("UserId")?.Value ?? "0");
+            var userId = long.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "0");
             try
             {
                 var job = await _service.UpdateAsync(id, userId, request);
@@ -63,7 +63,7 @@ namespace Upwork.API.Controllers
         [HttpDelete("{id:long}")]
         public async Task<IActionResult> Delete(long id)
         {
-            var userId = long.Parse(User.FindFirst("UserId")?.Value ?? "0");
+            var userId = long.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "0");
             var result = await _service.DeleteAsync(id, userId);
             if (!result) return NotFound("Job not found.");
             return NoContent();
@@ -72,7 +72,7 @@ namespace Upwork.API.Controllers
         [HttpPatch("{id:long}/close")]
         public async Task<IActionResult> Close(long id)
         {
-            var userId = long.Parse(User.FindFirst("UserId")?.Value ?? "0");
+            var userId = long.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "0");
             var result = await _service.CloseAsync(id, userId);
             if (!result) return NotFound("Job not found.");
             return Ok(new { message = "Job closed successfully." });
