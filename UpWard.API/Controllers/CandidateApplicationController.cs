@@ -29,7 +29,7 @@ namespace Upwork.API.Controllers
                 var userId = ClaimsHelper.GetUserId(User);
                 var application = await _applicationService.ApplyAsync(userId, jobId, request);
 
-                return Ok(application);
+                return StatusCode(StatusCodes.Status201Created, application);
             }
             catch (ArgumentException ex)
             {
@@ -54,7 +54,7 @@ namespace Upwork.API.Controllers
                 var userId = ClaimsHelper.GetUserId(User);
                 var application = await _applicationService.ApplyUsingProfileAsync(userId, jobId, applyDto);
 
-                return Ok(application);
+                return StatusCode(StatusCodes.Status201Created, application);
             }
             catch (ArgumentException ex)
             {
@@ -84,6 +84,22 @@ namespace Upwork.API.Controllers
             catch (UnauthorizedAccessException ex)
             {
                 return Unauthorized(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An unexpected error occurred." });
+            }
+        }
+        [HttpGet("{applicationId:long}")]
+        public async Task<IActionResult> GetApplicationById(long applicationId)
+        {
+            try
+            {
+                var userId = ClaimsHelper.GetUserId(User);
+
+                var application = await _applicationService.GetByIdAsync(userId,applicationId);
+
+                return application is null? NotFound("Job application not found.") : Ok(application);
             }
             catch (Exception ex)
             {

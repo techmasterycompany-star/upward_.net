@@ -9,16 +9,36 @@ namespace Upwork.Application.Services
     public class CommentService : ICommentService
     {
         private readonly ICommentRepository _commentRepository;
+        private readonly IJobRepository _jobRepository; 
 
-        public CommentService(ICommentRepository commentRepository)
+        public CommentService(ICommentRepository commentRepository, IJobRepository jobRepository)
         {
             _commentRepository = commentRepository;
+            _jobRepository = jobRepository;
+        }
+
+        public async Task<List<CommentDto>> GetByJobIdAsync(long jobId)
+        {
+            var comments = await _commentRepository.GetByJobIdAsync(jobId);
+
+            return comments.Select(c => c.ToDto()).ToList();
+        }
+
+        public async Task<CommentDto?> GetByIdAsync(long id)
+        {
+            var comment = await _commentRepository.GetCommentByIdAsync(id);
+            return comment?.ToDto();
         }
 
         public async Task<CommentDto> CreateAsync(long userId, long jobId, CreateCommentDto request)
         {
             if (string.IsNullOrWhiteSpace(request.Content))
                 throw new ArgumentException("Comment content is required.");
+
+            var job = await _jobRepository.GetApprovedJobByIdAsync(jobId);
+
+            if (job == null)
+                throw new KeyNotFoundException("Job not found");
 
             var comment = new Comment
             {
@@ -70,13 +90,6 @@ namespace Upwork.Application.Services
             await _commentRepository.SaveChangesAsync();
 
             return true;
-        }
-
-        public async Task<List<CommentDto>> GetByJobIdAsync(long jobId)
-        {
-            var comments = await _commentRepository.GetByJobIdAsync(jobId);
-
-            return comments.Select(c => c.ToDto()).ToList();
         }
 
     }

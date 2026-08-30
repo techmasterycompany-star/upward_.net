@@ -21,6 +21,10 @@ namespace Upwork.Infrastructure.Repositories
             return await _context.Skills
                 .FirstOrDefaultAsync(x => x.Name.ToLower() == normalized.ToLower());
         }
+        public async Task<Skill?> GetByIdAsync(long id)
+        {
+            return await _context.Skills.FindAsync(id);
+        }
 
         public async Task AddAsync(Skill skill)
         {
@@ -31,5 +35,6 @@ namespace Upwork.Infrastructure.Repositories
         {
             return _context.SaveChangesAsync();
         }
+
     }
 }

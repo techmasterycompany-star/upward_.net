@@ -43,7 +43,7 @@ namespace Upwork.API.Controllers
 
                 var comment = await _commentService.CreateAsync(userId, jobId, request);
 
-                return Ok(comment);
+                return StatusCode(StatusCodes.Status201Created, comment);
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -53,12 +53,31 @@ namespace Upwork.API.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
             catch (Exception)
             {
                 return StatusCode(500, new { message = "An unexpected error occurred." });
             }
         }
 
+        [HttpGet("comments/{commentId:long}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetCommentById(long commentId)
+        {
+            try
+            {
+                var comment = await _commentService.GetByIdAsync(commentId);
+
+                return comment is null? NotFound(new { message = "Comment not found." }) : Ok(comment);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { message = "An unexpected error occurred." });
+            }
+        }
         [HttpPut("comments/{commentId:long}")]
         public async Task<IActionResult> UpdateComment(long commentId, [FromBody] UpdateCommentDto request)
         {

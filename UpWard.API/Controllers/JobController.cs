@@ -72,7 +72,32 @@ namespace Upwork.API.Controllers
 
                 await _jobService.RecordViewAsync(jobId, userId, ipAddress);
 
-                return NoContent();
+                return Ok();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An unexpected error occurred." });
+            }
+        }
+
+        [HttpGet("saved-searches")]
+        public async Task<IActionResult> GetSavedSearches()
+        {
+            try
+            {
+                var userId = ClaimsHelper.GetUserId(User);
+
+                var result = await _jobService.GetSavedSearchesAsync(userId);
+
+                return Ok(result);
             }
             catch (KeyNotFoundException ex)
             {
@@ -97,32 +122,11 @@ namespace Upwork.API.Controllers
 
                 var result = await _jobService.SaveSearchAsync(userId, request);
 
-                return Ok(result);
+                return StatusCode(StatusCodes.Status201Created, result);
             }
             catch (ArgumentException ex)
             {
                 return BadRequest(new { message = ex.Message });
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "An unexpected error occurred." });
-            }
-        }
-
-        [HttpGet("saved-searches")]
-        public async Task<IActionResult> GetSavedSearches()
-        {
-            try
-            {
-                var userId = ClaimsHelper.GetUserId(User);
-
-                var result = await _jobService.GetSavedSearchesAsync(userId);
-
-                return Ok(result);
             }
             catch (KeyNotFoundException ex)
             {

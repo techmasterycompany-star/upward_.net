@@ -13,9 +13,7 @@ namespace Upwork.Application.Services
         private readonly ICandidateProfileRepository _candidateProfileRepository;
         private readonly IStorageService _storageService;
 
-        public CandidateProfileService(
-            ICandidateProfileRepository candidateProfileRepository,
-            IStorageService storageService)
+        public CandidateProfileService(ICandidateProfileRepository candidateProfileRepository, IStorageService storageService)
         {
             _candidateProfileRepository = candidateProfileRepository;
             _storageService = storageService;
@@ -104,6 +102,7 @@ namespace Upwork.Application.Services
             }
             profile.LinkedinProfile = dto.LinkedinProfile;
             profile.IsDiscoverable = dto.IsDiscoverable;
+            profile.User.Name = dto.Name;
             profile.UpdatedAt = DateTime.UtcNow;
 
             _candidateProfileRepository.Update(profile);

@@ -162,7 +162,7 @@ namespace Upwork.Application.Services
 
             if (profile is null)
             {
-                throw new KeyNotFoundException("user not found.");
+                throw new KeyNotFoundException("User not found.");
             }
 
             long candidateId = profile.Id;
@@ -180,22 +180,30 @@ namespace Upwork.Application.Services
 
             if (profile is null)
             {
-                throw new KeyNotFoundException("user not found.");
+                throw new KeyNotFoundException("User not found.");
             }
 
             long candidateId = profile.Id;
-            var application = await _applicationRepository
-                .GetByIdAsync(applicationId, candidateId);
+            var application = await _applicationRepository.GetByIdAsync(applicationId, candidateId);
+
 
             if (application is null)
             {
                 throw new KeyNotFoundException("Application not found.");
             }
 
+
+            if (application.Status == ApplicationStatus.Cancelled)
+            {
+                throw new InvalidOperationException("Application aleardy cancelled.");
+
+            }
+
             if (application.Status != ApplicationStatus.Submitted && application.Status != ApplicationStatus.UnderReview)
             {
                 throw new InvalidOperationException("Application cannot be cancelled after a final decision.");
             }
+
 
             application.Status = ApplicationStatus.Cancelled;
 
@@ -244,6 +252,21 @@ namespace Upwork.Application.Services
             return string.IsNullOrWhiteSpace(value)? null : value.Trim();
         }
 
+        public async Task<ApplicationDto?> GetByIdAsync(long userId, long applicationId)
+        {
+            var profile = await _candidateProfileRepository.GetByUserIdAsync(userId);
 
+            if (profile is null)
+            {
+                throw new KeyNotFoundException("user not found.");
+            }
+
+            long candidateId = profile.Id;
+
+            var application = await _applicationRepository.GetByIdAsync(candidateId, applicationId);
+
+            return application?.ToDto();
+
+        }
     }
 }

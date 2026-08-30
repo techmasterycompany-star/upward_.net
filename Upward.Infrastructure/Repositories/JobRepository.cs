@@ -63,8 +63,7 @@ namespace Upwork.Infrastructure.Repositories
         }
 
         // Job Search
-        public async Task<PagedResultDto<JobSearchResultDto>> SearchAsync(
-            JobSearchRequestDto request)
+        public async Task<PagedResultDto<JobSearchResultDto>> SearchAsync(JobSearchRequestDto request)
         {
             IQueryable<Job> query = _context.Jobs
                 .AsNoTracking()
@@ -167,9 +166,7 @@ namespace Upwork.Infrastructure.Repositories
             };
         }
 
-        private static IQueryable<Job> ApplySorting(
-            IQueryable<Job> query,
-            JobSearchRequestDto request)
+        private static IQueryable<Job> ApplySorting(IQueryable<Job> query, JobSearchRequestDto request)
         {
             return request.SortBy switch
             {
@@ -215,10 +212,7 @@ namespace Upwork.Infrastructure.Repositories
         }
 
         // Job Views
-        public async Task<JobView?> GetExistingViewAsync(
-            long jobId,
-            long? userId,
-            string? ipAddress)
+        public async Task<JobView?> GetExistingViewAsync(long jobId, long? userId, string? ipAddress)
         {
             if (userId.HasValue)
             {
@@ -259,20 +253,23 @@ namespace Upwork.Infrastructure.Repositories
             await _context.SavedSearches.AddAsync(savedSearch);
         }
 
-        public async Task<List<SavedSearch>> GetSavedSearchesAsync(
-            long candidateId)
+        public async Task<List<SavedSearch>> GetSavedSearchesAsync(long candidateId)
         {
             return await _context.SavedSearches
                 .AsNoTracking()
                 .Include(x => x.Category)
                 .Where(x => x.CandidateId == candidateId)
-                .OrderByDescending(x => x.CreatedAt)
+                .OrderByDescending(x => x.UpdatedAt)
                 .ToListAsync();
         }
 
-        public async Task<SavedSearch?> GetSavedSearchByIdAsync(
-            long candidateId,
-            long savedSearchId)
+        public async Task<SavedSearch?> GetSavedSearchNameAsync(long candidateId, string name)
+        {
+            return await _context.SavedSearches
+                .FirstOrDefaultAsync(x => x.CandidateId == candidateId && x.Name == name);
+        }
+
+        public async Task<SavedSearch?> GetSavedSearchByIdAsync(long candidateId, long savedSearchId)
         {
             return await _context.SavedSearches
                 .FirstOrDefaultAsync(x =>

@@ -29,6 +29,7 @@ namespace Upwork.Application.Interfaces.IRepo
         // Saved Searches
         Task AddSavedSearchAsync(SavedSearch savedSearch);
         Task<List<SavedSearch>> GetSavedSearchesAsync(long candidateId);
+        Task<SavedSearch?> GetSavedSearchNameAsync(long candidateId, string name);
         Task<SavedSearch?> GetSavedSearchByIdAsync(long candidateId, long savedSearchId);
         void RemoveSavedSearch(SavedSearch savedSearch);
 

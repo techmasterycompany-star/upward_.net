@@ -10,10 +10,12 @@ namespace Upwork.Application.Services
     {
         private readonly IJobRepository _jobRepository;
         private readonly ICandidateProfileRepository _candidateProfileRepository;
+        private readonly ICategoryRepository _categoryRepository;
         public JobService(IJobRepository jobRepository, ICandidateProfileRepository candidateProfileRepository, ICategoryRepository categoryRepository)
         {
             _jobRepository = jobRepository;
             _candidateProfileRepository = candidateProfileRepository;
+            _categoryRepository = categoryRepository;
         }
         public async Task<PagedResultDto<JobSearchResultDto>> SearchAsync(JobSearchRequestDto request)
         {
@@ -76,7 +78,7 @@ namespace Upwork.Application.Services
 
             if (profile is null)
             {
-                throw new KeyNotFoundException("user not found.");
+                throw new KeyNotFoundException("User not found.");
             }
 
             long candidateId = profile.Id;
@@ -91,23 +93,57 @@ namespace Upwork.Application.Services
                 throw new ArgumentException("Minimum salary cannot be greater than maximum salary.");
             }
 
-            var savedSearch = new SavedSearch
+            if (request.CategoryId.HasValue)
             {
-                CandidateId = candidateId,
-                Name = request.Name.Trim(),
-                Keyword = Normalize(request.Keyword),
-                Location = Normalize(request.Location),
-                CategoryId = request.CategoryId,
-                WorkType = request.WorkType,
-                MinSalary = request.MinSalary,
-                MaxSalary = request.MaxSalary,
-                ExperienceLevel = request.ExperienceLevel
-            };
+                var category = await _categoryRepository.GetByIdAsync(request.CategoryId.Value);
+                if (category is null)
+                {
+                    throw new KeyNotFoundException("Category Id Not Found");
+                }
+            }
 
-            await _jobRepository.AddSavedSearchAsync(savedSearch);
+            var searchName = request.Name.Trim();
+
+            var savedSearch = await _jobRepository.GetSavedSearchNameAsync(candidateId, searchName);
+
+            if (savedSearch != null)
+            {
+                savedSearch.Keyword = Normalize(request.Keyword);
+                savedSearch.Location = Normalize(request.Location);
+                savedSearch.CategoryId = request.CategoryId;
+                savedSearch.WorkType = request.WorkType;
+                savedSearch.MinSalary = request.MinSalary;
+                savedSearch.MaxSalary = request.MaxSalary;
+                savedSearch.ExperienceLevel = request.ExperienceLevel;
+                savedSearch.UpdatedAt = DateTime.UtcNow;
+            }
+            else
+            {
+                savedSearch = new SavedSearch
+                {
+                    CandidateId = candidateId,
+                    Name = request.Name.Trim(),
+                    Keyword = Normalize(request.Keyword),
+                    Location = Normalize(request.Location),
+                    CategoryId = request.CategoryId,
+                    WorkType = request.WorkType,
+                    MinSalary = request.MinSalary,
+                    MaxSalary = request.MaxSalary,
+                    ExperienceLevel = request.ExperienceLevel,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                };
+
+                await _jobRepository.AddSavedSearchAsync(savedSearch);
+            }
+
+
+
             await _jobRepository.SaveChangesAsync();
 
+
             return savedSearch.ToDto();
+            
         }
 
         public async Task<List<SavedSearchDto>> GetSavedSearchesAsync(long userId)
@@ -116,7 +152,7 @@ namespace Upwork.Application.Services
 
             if (profile is null)
             {
-                throw new KeyNotFoundException("user not found.");
+                throw new KeyNotFoundException("User not found.");
             }
 
             long candidateId = profile.Id;
@@ -132,7 +168,7 @@ namespace Upwork.Application.Services
 
             if (profile is null)
             {
-                throw new KeyNotFoundException("user not found.");
+                throw new KeyNotFoundException("User not found.");
             }
 
             long candidateId = profile.Id;
