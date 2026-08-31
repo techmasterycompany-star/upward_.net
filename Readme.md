@@ -311,25 +311,6 @@ Subscription renewed - Subscription cancelled
 | **Employer** | Manage company profile, post and manage jobs, review applications, view analytics, and manage subscriptions |
 | **Admin** | Manage users, jobs, categories, technologies, comments, dashboard, and statistics |
 
-------------------------------------------------------------------------
-
-# Main Domain Entities
-
--   User
--   CandidateProfile
--   EmployerProfile
--   Job
--   JobApplication
--   Skill
--   CandidateSkill
--   Comment
--   SavedSearch
--   JobView
--   Notification
--   Subscription
--   Payment
--   Category
--   Technology
 
 ------------------------------------------------------------------------
 
