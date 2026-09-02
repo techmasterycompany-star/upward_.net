@@ -348,3 +348,12 @@ The backend covers the main platform workflows:
 The Clean Architecture structure allows additional features and
 integrations to be developed while keeping business logic separated from
 infrastructure and external services.
+
+## API Documentation
+
+- Swagger: available when running the API in development mode
+- Postman documentation: https://documenter.getpostman.com/view/46257067/2sBYAuSrHd
+
+## Deployment
+
+Live application: https://upwork-api.runasp.net/
